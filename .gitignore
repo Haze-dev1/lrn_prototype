@@ -1,0 +1,40 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+*.egg-info/
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+.vite/
+coverage/
+playwright-report/
+test-results/
+
+# Logs / local data
+logs/
+*.log
+npm-debug.log*
+*.sqlite*
+pgdata/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/

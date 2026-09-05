@@ -1,0 +1,140 @@
+# LRN base topology — production-shaped.
+#
+# `docker compose up` in development automatically merges docker-compose.override.yml, which adds
+# source mounts, hot reload, and loopback datastore ports on top of this file.
+#
+# Production runs this file alone:
+#   docker compose -f docker-compose.yml up -d --build
+#
+# Compose MERGES list fields such as `volumes` and `ports` across files; it cannot remove an entry
+# an earlier file declared. The base file therefore contains nothing a production deployment must
+# strip, and the override only ever adds. Anything else silently leaks development configuration
+# into production.
+
+name: lrn
+
+services:
+  proxy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    ports:
+      - "${PROXY_HTTP_PORT:-80}:80"
+      - "${PROXY_HTTPS_PORT:-443}:443"
+    environment:
+      # ':80' serves plain HTTP for local development. A hostname (lrn.example.com) makes Caddy
+      # provision and renew a TLS certificate automatically.
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+      TLS_CONTACT_EMAIL: ${TLS_CONTACT_EMAIL:-}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_started
+      api:
+        condition: service_started
+
+  web:
+    build:
+      context: ./web
+      target: runtime
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+    expose:
+      - "3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  api:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    # Worker count is bounded by the database, not by CPU. Each worker is a separate process
+    # with its own connection pool, so the arithmetic is:
+    #   workers x (DATABASE_POOL_SIZE + DATABASE_MAX_OVERFLOW) + scheduler <= max_connections
+    #   4 x (10 + 5) + 15 = 75 of Postgres's default 100.
+    # Raising this without lowering the pool exhausts the server, and the failure surfaces as
+    # "FATAL: sorry, too many clients already" on random requests, which reads like an
+    # application bug rather than a configuration one.
+    command: uvicorn core.apis.api:app --host 0.0.0.0 --port 8000 --workers 4
+    env_file: .env
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+
+  scheduler:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    command: python scheduler.py
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      # Asserts the heartbeat key the scheduler writes to Redis, so a process that is alive but
+      # whose job loop has stalled is still reported unhealthy.
+      test: ["CMD", "python", "-m", "core.jobs.healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      # Named volume, not a container-filesystem path: data must survive container recreation and
+      # image replacement. Postgres 18+ images expect the mount at /var/lib/postgresql (not
+      # .../data) so the cluster sits in a version-named subdirectory and pg_upgrade --link can
+      # run without crossing a mount boundary.
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --appendonly no
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:

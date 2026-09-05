@@ -1,0 +1,53 @@
+# Same-origin routing for LRN.
+#
+# Serving the web app and the API from one origin is what lets the session cookie be
+# HttpOnly + SameSite=Lax with no CORS surface and no token in browser-accessible storage.
+#
+# One file serves both environments so routing and header behaviour under test is identical to
+# production. SITE_ADDRESS selects the mode:
+#   :80                 plain HTTP, for local development
+#   lrn.example.com     Caddy provisions and renews TLS automatically
+
+{
+	admin off
+	# A default is required because an empty `email` argument is a Caddyfile parse error. The
+	# value is only used when provisioning certificates, so it is inert on a plain-HTTP site.
+	email {$TLS_CONTACT_EMAIL:dev@localhost}
+}
+
+{$SITE_ADDRESS} {
+	encode gzip zstd
+
+	# `handle_path` strips the /api prefix, so the API serves clean unprefixed routes and its
+	# OpenAPI paths are identical whether it is called internally or through the proxy.
+	handle_path /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
+
+	header {
+		# Browsers ignore HSTS over plain HTTP, so this is inert in development and correct in
+		# production without needing a second config file.
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		# `same-origin-allow-popups` rather than `same-origin`: Google Identity Services signs
+		# the user in through a popup that posts the credential back to its opener. Under strict
+		# `same-origin` the browser severs `window.opener` for that popup, and the flow fails
+		# silently — the popup opens, the user signs in, and nothing ever comes back. This value
+		# keeps the protection that matters here: a cross-origin document that opens LRN still
+		# gets no reference to this window. It only permits popups LRN itself opens to reference
+		# their opener.
+		Cross-Origin-Opener-Policy same-origin-allow-popups
+		-Server
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

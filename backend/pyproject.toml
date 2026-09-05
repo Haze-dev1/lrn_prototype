@@ -1,0 +1,59 @@
+[project]
+name = "lrn-api"
+version = "0.1.0"
+description = "LRN backend API — adaptive technical interview preparation platform"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "fastapi==0.141.1",
+    "uvicorn[standard]==0.52.4",
+    "sqlalchemy[asyncio]==2.0.52",
+    "alembic==1.19.1",
+    "psycopg[binary,pool]==3.3.5",
+    "pydantic==2.13.5",
+    "pydantic-settings==2.15.0",
+    "email-validator==2.3.0",
+    "redis==8.1.0",
+    "apscheduler==3.11.3",
+    "httpx==0.28.1",
+    "tenacity==9.1.4",
+    "argon2-cffi==25.1.0",
+    "pyjwt==2.13.0",
+    "authlib==1.8.0",
+    "stripe==15.6.1",
+    "python-multipart==0.0.32",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "ruff==0.15.1",
+    "mypy==1.19.1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "S"]
+ignore = ["E501", "B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# S101: asserts are how tests assert. S105/S106: test fixtures contain literal passwords by
+# necessity; flagging them trains the reader to ignore the rule where it does matter.
+"tests/*" = ["S101", "S105", "S106"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+# The application runs on one long-lived event loop, and the Redis and database clients are
+# process-wide singletons bound to it. A session-scoped test loop reproduces that lifecycle;
+# the default per-test loop closes underneath those pooled connections.
+asyncio_default_test_loop_scope = "session"
+asyncio_default_fixture_loop_scope = "session"
+testpaths = ["tests"]
+filterwarnings = ["error::DeprecationWarning:core.*"]
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true

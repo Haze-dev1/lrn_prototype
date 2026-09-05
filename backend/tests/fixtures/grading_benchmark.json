@@ -1,0 +1,149 @@
+{
+  "$comment": "Human-labelled grading benchmark. Each case names a question by its content source_key, supplies a student answer, and states the band a human reviewer assigned. Run it before changing the grading model, the prompt, or a rubric: a change that moves agreement down is a regression regardless of how good it looks in isolation. The `label` groups cases by the kind of answer they represent, so a provider can be weak in one specific way — plausible-but-wrong, or differently-phrased-correct — without that being hidden inside a single aggregate number.",
+  "cases": [
+    {
+      "id": "acc-001-excellent",
+      "source_key": "acc-001-three-statements",
+      "label": "excellent",
+      "expected_band": "strong",
+      "answer": "Net income from the income statement is the top line of the cash flow statement. You add back non-cash charges like depreciation and amortisation and stock comp, adjust for changes in working capital, and that gives cash from operations. Subtract capex for investing, then debt raised or repaid and dividends for financing. The three sections sum to the net change in cash, which you add to opening cash to get the closing cash balance on the balance sheet. Net income less dividends also flows into retained earnings in equity, depreciation reduces net PP&E and capex increases it, and the working capital movements are the period-over-period changes in those current accounts. When all of that is right, the balance sheet balances.",
+      "notes": "Complete walk-through, closes the loop back to the balance sheet."
+    },
+    {
+      "id": "acc-001-good",
+      "source_key": "acc-001-three-statements",
+      "label": "good",
+      "expected_band": "strong",
+      "answer": "Start at net income on the cash flow statement, add back depreciation and other non-cash items, then adjust for working capital changes to get operating cash flow. Capex is the main investing item and debt and equity movements are financing. The total change in cash updates the balance sheet cash line, and net income less dividends increases retained earnings. Depreciation also reduces net PP&E while capex increases it.",
+      "notes": "Slightly less detail but every linkage is present."
+    },
+    {
+      "id": "acc-001-partial",
+      "source_key": "acc-001-three-statements",
+      "label": "partial",
+      "expected_band": "developing",
+      "answer": "Net income starts the cash flow statement. You add back depreciation because it is non-cash and adjust for working capital to get operating cash flow. Then you have investing with capex and financing with debt and equity.",
+      "notes": "Cash flow statement is right but never connects back to the balance sheet."
+    },
+    {
+      "id": "acc-001-weak",
+      "source_key": "acc-001-three-statements",
+      "label": "weak",
+      "expected_band": "needs_work",
+      "answer": "The three statements are the income statement, the balance sheet and the cash flow statement. They are all connected to each other and you need all three to understand a company.",
+      "notes": "Names the statements, explains no linkage at all."
+    },
+    {
+      "id": "acc-001-incorrect",
+      "source_key": "acc-001-three-statements",
+      "label": "incorrect",
+      "expected_band": "needs_work",
+      "answer": "You start the cash flow statement at revenue and subtract all the expenses that were paid in cash. Depreciation is a cash outflow so you subtract it. The balance sheet does not really connect to the other two, it is just a snapshot on its own.",
+      "notes": "Actively wrong: starts at revenue, treats depreciation as cash, denies the linkage."
+    },
+    {
+      "id": "acc-002-plausible-but-wrong",
+      "source_key": "acc-002-depreciation-increase",
+      "label": "plausible_but_wrong",
+      "expected_band": "needs_work",
+      "answer": "Depreciation of $10 reduces pre-tax income by $10 and net income by the full $10. On the cash flow statement you add back the $10, so cash flow from operations is unchanged and cash does not move. On the balance sheet, PP&E falls by $10 and retained earnings falls by $10, so it balances.",
+      "notes": "Fluent, internally consistent, and misses the tax shield entirely. The hardest case for a grader: it sounds right."
+    },
+    {
+      "id": "acc-002-excellent",
+      "source_key": "acc-002-depreciation-increase",
+      "label": "excellent",
+      "expected_band": "strong",
+      "answer": "Pre-tax income falls by $10. At a 25% rate taxes fall by $2.50, so net income falls by $7.50. On the cash flow statement you start from net income down $7.50 and add back the full $10 of depreciation, so operating cash flow rises by $2.50 and cash is up $2.50. On the balance sheet, cash is up $2.50 and net PP&E is down $10, so assets fall $7.50, and retained earnings fall $7.50 through net income, so it balances. The point is that depreciation is a tax shield: it costs no cash directly but reduces taxable income, so the company keeps $2.50 more.",
+      "notes": "Correct arithmetic and states the underlying intuition."
+    },
+    {
+      "id": "eev-001-differently-phrased",
+      "source_key": "eev-001-bridge",
+      "label": "differently_phrased_correct",
+      "expected_band": "strong",
+      "answer": "Think of it as paying off everyone senior to the common shareholders. The firm value covers every capital provider, so you settle what the lenders are owed, hand the preferred holders their claim, carve out whatever slice of a subsidiary belongs to outside investors, and credit back the money already sitting in the till since the buyer effectively receives it at closing. What is left over is what the ordinary owners get.",
+      "notes": "Entirely correct and uses almost none of the standard vocabulary. Tests whether the grader rewards understanding or keyword matching."
+    },
+    {
+      "id": "eev-001-excellent",
+      "source_key": "eev-001-bridge",
+      "label": "excellent",
+      "expected_band": "strong",
+      "answer": "Equity value equals enterprise value minus net debt and minus the other claims senior to common equity. You subtract total debt, subtract preferred stock, subtract non-controlling interest, and add back cash and equivalents. Enterprise value is the value of the operating business regardless of financing so it belongs to all capital providers, while equity value is what remains for common shareholders once every senior claim is settled. Cash is added back because it is a non-operating asset the acquirer effectively receives at closing.",
+      "notes": "Textbook complete, with the reasoning behind the cash add-back."
+    },
+    {
+      "id": "eev-001-sign-error",
+      "source_key": "eev-001-bridge",
+      "label": "incorrect",
+      "expected_band": "needs_work",
+      "answer": "You take enterprise value, add the total debt outstanding, and then subtract the cash on the balance sheet to arrive at equity value.",
+      "notes": "The bridge run backwards. A common and consequential error."
+    },
+    {
+      "id": "eev-001-partial",
+      "source_key": "eev-001-bridge",
+      "label": "partial",
+      "expected_band": "developing",
+      "answer": "Equity value is enterprise value minus debt plus cash. That gets you what the shareholders own after the lenders are paid off.",
+      "notes": "Core bridge correct; omits preferred and minority interest entirely."
+    },
+    {
+      "id": "dcf-001-excellent",
+      "source_key": "dcf-001-walkthrough",
+      "label": "excellent",
+      "expected_band": "strong",
+      "answer": "You project unlevered free cash flow for five to ten years: EBIT less taxes on EBIT, plus depreciation and amortisation, less capex, less the increase in net working capital. It is unlevered because it is before interest, so it belongs to all capital providers. You discount those at WACC, which blends the after-tax cost of debt and the cost of equity from CAPM at target weights. Then you calculate terminal value, either Gordon growth with the final year's cash flow grown at a perpetual rate over WACC less that rate, or an exit multiple on terminal EBITDA, and discount that back too. Summing the discounted cash flows and terminal value gives enterprise value; subtract net debt for equity value and divide by diluted shares for value per share. Then sensitise on WACC and the terminal assumption because those drive most of the answer.",
+      "notes": "Complete and correctly ordered, including the bridge to per-share value."
+    },
+    {
+      "id": "dcf-001-plausible-but-wrong",
+      "source_key": "dcf-001-walkthrough",
+      "label": "plausible_but_wrong",
+      "expected_band": "needs_work",
+      "answer": "You project levered free cash flow, which is cash flow after interest expense, and discount it back at the weighted average cost of capital. Add up the discounted cash flows and the terminal value and that gives you equity value directly, so you divide by shares outstanding to get the price per share.",
+      "notes": "Confident and structurally fluent, but double-counts the financing effect and skips the bridge. The error a grader must catch."
+    },
+    {
+      "id": "dcf-001-partial",
+      "source_key": "dcf-001-walkthrough",
+      "label": "partial",
+      "expected_band": "developing",
+      "answer": "Project free cash flow for five years, discount it back at WACC, add a terminal value, and sum it up to get enterprise value. Then subtract net debt for equity value.",
+      "notes": "Right skeleton, no free cash flow definition and no sensitivity."
+    },
+    {
+      "id": "lbo-001-excellent",
+      "source_key": "lbo-001-what-is-lbo",
+      "label": "excellent",
+      "expected_band": "strong",
+      "answer": "An LBO is buying a company with a large proportion of debt and a small equity cheque, where the target's own cash flows service and repay that debt and its assets secure it. A sponsor holds it three to seven years, pays down debt, improves operations, and exits to a strategic, another sponsor, or an IPO. Returns come from three places: deleveraging, since repaid debt converts into equity value; EBITDA growth from revenue and margin; and multiple expansion, which is the least controllable. A good candidate has stable predictable cash flows, low existing leverage so there is room to add debt, modest capex so cash is available for paydown, defensible margins, and a credible exit.",
+      "notes": "Definition, all three return drivers, and the candidate criteria."
+    },
+    {
+      "id": "lbo-001-weak",
+      "source_key": "lbo-001-what-is-lbo",
+      "label": "weak",
+      "expected_band": "needs_work",
+      "answer": "An LBO is when a private equity firm buys a company using debt. A good target is a company that is growing very fast with lots of potential, ideally a technology startup that is scaling quickly.",
+      "notes": "Definition is thin and the candidate criteria are backwards."
+    },
+    {
+      "id": "val-001-partial",
+      "source_key": "val-001-three-methods",
+      "label": "partial",
+      "expected_band": "developing",
+      "answer": "The main methods are trading comparables, precedent transactions and a DCF. Precedents usually give the highest value because there is a control premium in an acquisition, and comps give you where the market is pricing similar businesses today.",
+      "notes": "Correct as far as it goes; omits the LBO floor and treats the ordering as a rule."
+    },
+    {
+      "id": "val-001-empty-ish",
+      "source_key": "val-001-three-methods",
+      "label": "incorrect",
+      "expected_band": "needs_work",
+      "answer": "I would look at the company's financials and compare it to other companies to see what it is worth.",
+      "notes": "No methodology named. Floor case: a grader that scores this above needs_work is not discriminating."
+    }
+  ]
+}

@@ -1,0 +1,2233 @@
+{
+  "$comment": "Authored question bank. Each entry is keyed by `source_key`, which is stable across re-seeds: the seeder upserts on it, so editing this file and re-running updates the bank instead of duplicating it. Content changes create a new question version and publish it; unchanged content is left alone so version history stays meaningful. Rubric band_thresholds are the score floors for each band.",
+  "questions": [
+    {
+      "source_key": "acc-001-three-statements",
+      "category_slug": "accounting",
+      "subcategory": "Statement linkages",
+      "difficulty": 1,
+      "prompt": "Walk me through how the three financial statements link together.",
+      "ideal_answer": "Net income from the bottom of the income statement is the starting line of the cash flow statement. From there you add back non-cash charges such as depreciation and amortisation and stock-based compensation, adjust for changes in working capital, and that gives cash flow from operations. Subtract capital expenditure and other investing activity for cash flow from investing, then layer in debt raised or repaid, equity issued or bought back, and dividends for cash flow from financing. The three sections sum to the net change in cash, which is added to the opening cash balance to give the closing cash balance that appears on the balance sheet. On the balance sheet, net income also flows into retained earnings within shareholders' equity, less any dividends. Depreciation reduces net PP&E, capex increases it, and the working capital movements you adjusted for on the cash flow statement are the period-over-period changes in the current asset and liability accounts. When all of that is done correctly the balance sheet balances.",
+      "expected_concepts": [
+        {
+          "key": "net_income_links_cfs",
+          "label": "Net income is the starting point of the cash flow statement"
+        },
+        {
+          "key": "retained_earnings",
+          "label": "Net income less dividends flows into retained earnings"
+        },
+        {
+          "key": "non_cash_addbacks",
+          "label": "Non-cash charges such as D&A are added back"
+        },
+        {
+          "key": "working_capital",
+          "label": "Changes in working capital adjust operating cash flow"
+        },
+        {
+          "key": "cash_balance_links",
+          "label": "Ending cash from the cash flow statement is the balance sheet cash line"
+        },
+        {
+          "key": "ppe_roll_forward",
+          "label": "Capex increases and depreciation reduces net PP&E"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "starts_at_revenue",
+          "label": "Starting the cash flow statement at revenue rather than net income"
+        },
+        {
+          "key": "omits_balance_sheet_link",
+          "label": "Never closing the loop back to the balance sheet"
+        },
+        {
+          "key": "confuses_direction",
+          "label": "Getting the sign of a working capital change backwards"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "This is the single most common opening technical. Reward a clean, ordered walk-through more than exhaustive detail. A candidate who names every statement but never connects ending cash or retained earnings back to the balance sheet has not answered the question asked.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "acc-002-depreciation-increase",
+      "category_slug": "accounting",
+      "subcategory": "Statement linkages",
+      "difficulty": 2,
+      "prompt": "Depreciation increases by $10. Walk me through the impact on all three statements, assuming a 25% tax rate.",
+      "ideal_answer": "Income statement: depreciation of $10 is an operating expense, so pre-tax income falls by $10. At a 25% tax rate, taxes fall by $2.50, so net income falls by $7.50. Cash flow statement: start from net income down $7.50, then add back the $10 of depreciation because it is non-cash, so cash flow from operations rises by $2.50. With no other changes, net change in cash is positive $2.50. Balance sheet: cash is up $2.50 and net PP&E is down $10, so total assets fall by $7.50. On the other side, retained earnings fall by $7.50 through the reduced net income. Both sides are down $7.50 and the balance sheet balances. The intuition is that depreciation is a tax shield: it never costs cash directly, but it reduces taxable income, so the company keeps $2.50 more cash than it otherwise would.",
+      "expected_concepts": [
+        {
+          "key": "pretax_income_impact",
+          "label": "Pre-tax income falls by the full depreciation amount"
+        },
+        {
+          "key": "tax_effect",
+          "label": "Taxes fall by depreciation times the tax rate"
+        },
+        {
+          "key": "net_income_after_tax",
+          "label": "Net income falls by the after-tax amount, not the full amount"
+        },
+        {
+          "key": "addback_non_cash",
+          "label": "Depreciation is added back in full on the cash flow statement"
+        },
+        {
+          "key": "cash_increases",
+          "label": "Cash rises by the tax saving"
+        },
+        {
+          "key": "balance_sheet_balances",
+          "label": "Assets and equity both fall by the after-tax amount"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "forgets_tax_shield",
+          "label": "Reducing net income by the full $10 and ignoring tax"
+        },
+        {
+          "key": "cash_falls",
+          "label": "Claiming cash falls, treating depreciation as a cash outflow"
+        },
+        {
+          "key": "forgets_ppe",
+          "label": "Omitting the reduction in net PP&E"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Numerical accuracy matters here. The tax shield is the whole point of the question; an answer that gets the mechanics right but says cash is unchanged has missed it.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "acc-003-inventory-writedown",
+      "category_slug": "accounting",
+      "subcategory": "Working capital",
+      "difficulty": 3,
+      "prompt": "A company writes down $100 of inventory. Walk me through the three statements, assuming a 25% tax rate.",
+      "ideal_answer": "Income statement: the write-down is recognised as an expense, often within cost of goods sold or as a separate impairment line, so pre-tax income falls by $100. Taxes fall by $25, so net income falls by $75. Cash flow statement: begin with net income down $75, then add back the $100 write-down as a non-cash charge. That add-back is usually shown either as a separate non-cash line or through the change in inventory within working capital, but it must not be double-counted. Cash flow from operations rises by $25 and cash increases by $25. Balance sheet: inventory falls by $100 and cash rises by $25, so assets are down $75; retained earnings are down $75, and it balances. The key judgement is that a write-down is a non-cash accounting recognition of value already lost, so the only real cash effect is the tax deduction, and only when the deduction is currently allowable.",
+      "expected_concepts": [
+        {
+          "key": "non_cash_charge",
+          "label": "The write-down is a non-cash charge"
+        },
+        {
+          "key": "tax_benefit",
+          "label": "The only cash effect is the tax saving"
+        },
+        {
+          "key": "inventory_reduction",
+          "label": "Inventory falls by the full write-down on the balance sheet"
+        },
+        {
+          "key": "no_double_count",
+          "label": "The add-back must not also be counted as a working capital change"
+        },
+        {
+          "key": "balance_sheet_balances",
+          "label": "Assets and equity both fall by the after-tax amount"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "cash_outflow",
+          "label": "Treating the write-down as a cash outflow of $100"
+        },
+        {
+          "key": "double_counting",
+          "label": "Adding back the write-down and separately reducing inventory in working capital"
+        },
+        {
+          "key": "no_tax",
+          "label": "Ignoring the tax effect entirely"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The double-counting trap is what separates a strong answer from a memorised one. Credit a candidate who explicitly flags it even if their presentation is otherwise plain.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "acc-004-deferred-revenue",
+      "category_slug": "accounting",
+      "subcategory": "Revenue recognition",
+      "difficulty": 3,
+      "prompt": "What is deferred revenue, where does it sit, and why do investors in subscription businesses watch it closely?",
+      "ideal_answer": "Deferred revenue is cash a company has collected for goods or services it has not yet delivered. Because the obligation to deliver still exists, it is recorded as a liability on the balance sheet, not as revenue, and it is released into the income statement as revenue over the period the obligation is satisfied. When a customer pays a year of subscription upfront, cash and deferred revenue both rise immediately; revenue is then recognised roughly one twelfth per month, with deferred revenue drawing down correspondingly. Investors watch it for two reasons. First, it is a forward indicator: the balance represents contracted revenue that has already been paid for and will be recognised in future periods, so a growing balance signals bookings strength before it appears in the income statement. Second, it is a working capital source, and a business collecting cash before delivering has negative working capital that funds its own growth. A deferred revenue balance falling while reported revenue holds up is a warning sign that new bookings have slowed and the company is recognising through a backlog it is not replacing.",
+      "expected_concepts": [
+        {
+          "key": "liability_not_revenue",
+          "label": "It is a liability because the obligation is unfulfilled"
+        },
+        {
+          "key": "cash_before_delivery",
+          "label": "Cash is collected before the service is delivered"
+        },
+        {
+          "key": "recognised_over_time",
+          "label": "It is released into revenue as the obligation is satisfied"
+        },
+        {
+          "key": "forward_indicator",
+          "label": "It signals contracted future revenue ahead of the income statement"
+        },
+        {
+          "key": "working_capital_source",
+          "label": "It is a source of working capital that funds growth"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "calls_it_asset",
+          "label": "Describing deferred revenue as an asset"
+        },
+        {
+          "key": "confuses_with_ar",
+          "label": "Confusing it with accounts receivable, which is the opposite timing"
+        },
+        {
+          "key": "no_investor_lens",
+          "label": "Defining the term without saying why anyone cares"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Two-part question. A correct definition alone is a Developing answer; the investor lens is what makes it Strong.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "acc-005-cash-vs-accrual",
+      "category_slug": "accounting",
+      "subcategory": "Quality of earnings",
+      "difficulty": 4,
+      "prompt": "A company reports growing net income but declining cash flow from operations for three straight years. What would you investigate?",
+      "ideal_answer": "The gap between accrual earnings and cash generation has to be explained by something on the reconciliation, so I would work down it. First, receivables: if days sales outstanding is rising, revenue is being recognised on sales the company has not collected, which can mean aggressive recognition, weakening customer credit quality, or channel stuffing. Second, inventory: a build ahead of demand ties up cash and often precedes a write-down. Third, payables: a stretching payables balance flatters cash flow, so if payables are also falling the working capital drain is broader. Fourth, revenue recognition policy itself, including any change in estimates, percentage-of-completion judgements, or a shift in contract terms. Fifth, capitalisation: costs moved from the income statement to the balance sheet, such as capitalised software or interest, raise net income while cash spending is unchanged. Sixth, one-off or non-cash gains inflating net income without cash. I would look at the cash conversion ratio over the period, compare the trend to close competitors to separate a company problem from an industry cycle, and read the critical audit matters and any restatement or auditor change. The concern is that earnings quality is deteriorating and that the reported growth is an accounting artefact rather than a business result.",
+      "expected_concepts": [
+        {
+          "key": "receivables_dso",
+          "label": "Rising receivables and days sales outstanding"
+        },
+        {
+          "key": "inventory_build",
+          "label": "Inventory building ahead of demand"
+        },
+        {
+          "key": "payables_timing",
+          "label": "Payables timing distorting the comparison"
+        },
+        {
+          "key": "revenue_recognition",
+          "label": "Aggressive or changed revenue recognition policy"
+        },
+        {
+          "key": "capitalisation",
+          "label": "Costs capitalised rather than expensed"
+        },
+        {
+          "key": "non_cash_gains",
+          "label": "One-off or non-cash gains inflating net income"
+        },
+        {
+          "key": "benchmarking",
+          "label": "Comparing the trend against peers to isolate the cause"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "single_cause",
+          "label": "Naming one cause and stopping"
+        },
+        {
+          "key": "assumes_fraud",
+          "label": "Jumping straight to fraud without working the reconciliation"
+        },
+        {
+          "key": "no_investigation_plan",
+          "label": "Listing possible causes with no way to distinguish between them"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "A judgement question, not a mechanics question. Reward a structured investigation with a way to tell the causes apart. Breadth without a method to narrow it down is Developing at best.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "eev-001-bridge",
+      "category_slug": "enterprise-equity-value",
+      "subcategory": "The bridge",
+      "difficulty": 1,
+      "prompt": "How do you get from enterprise value to equity value?",
+      "ideal_answer": "Equity value equals enterprise value minus net debt and minus other claims that rank ahead of common shareholders. Concretely, you subtract total debt, subtract preferred stock, subtract non-controlling interest, and add back cash and cash equivalents. You may also add the value of non-operating assets such as equity investments in unconsolidated affiliates, and subtract other debt-like items such as unfunded pension obligations or capital lease liabilities where they are not already in debt. The logic is that enterprise value is the value of the operating business regardless of how it is financed, so it belongs to all providers of capital. Equity value is what is left for common shareholders once every senior claim has been settled. Cash is added back because it is a non-operating asset already owned by the business, so an acquirer effectively gets it back on closing. Going the other way, you start with equity value, which is the diluted share count times the share price, and reverse each adjustment.",
+      "expected_concepts": [
+        {
+          "key": "subtract_debt",
+          "label": "Subtract total debt"
+        },
+        {
+          "key": "add_cash",
+          "label": "Add back cash and equivalents"
+        },
+        {
+          "key": "preferred_and_nci",
+          "label": "Subtract preferred stock and non-controlling interest"
+        },
+        {
+          "key": "all_capital_providers",
+          "label": "Enterprise value belongs to all capital providers, equity value to common shareholders"
+        },
+        {
+          "key": "capital_structure_neutral",
+          "label": "Enterprise value is independent of capital structure"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "sign_error",
+          "label": "Adding debt or subtracting cash, reversing the bridge"
+        },
+        {
+          "key": "forgets_nci_preferred",
+          "label": "Omitting preferred stock and non-controlling interest"
+        },
+        {
+          "key": "no_intuition",
+          "label": "Reciting the formula with no explanation of why"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Foundational. Getting the direction right is necessary but not sufficient for Strong; the reason cash is added back should be there.",
+        "band_thresholds": {
+          "strong": 82,
+          "developing": 58
+        }
+      }
+    },
+    {
+      "source_key": "eev-002-metric-pairing",
+      "category_slug": "enterprise-equity-value",
+      "subcategory": "Multiple construction",
+      "difficulty": 2,
+      "prompt": "Why do you pair EV with EBITDA but equity value with net income? What happens if you mix them up?",
+      "ideal_answer": "The rule is that the numerator and denominator must belong to the same claimants. EBITDA is earnings before interest, so it is a pre-debt-service measure available to both debt and equity holders; the matching numerator is enterprise value, which is the claim of all capital providers. Net income is after interest expense, so it is what remains for equity holders alone, and the matching numerator is equity value or market capitalisation. Revenue and EBIT are also pre-interest and therefore pair with enterprise value; earnings per share and book value of equity are post-interest or equity-level and pair with equity value. If you mix them, for example by computing enterprise value over net income, the multiple is not comparable across companies because it moves with leverage rather than with operating performance. A highly levered company would look artificially expensive on that measure purely because interest expense has compressed net income while enterprise value still includes the debt. That is the practical harm: the multiple stops measuring the business and starts measuring the balance sheet.",
+      "expected_concepts": [
+        {
+          "key": "claimant_consistency",
+          "label": "Numerator and denominator must correspond to the same claimants"
+        },
+        {
+          "key": "ebitda_pre_interest",
+          "label": "EBITDA is pre-interest and available to all capital providers"
+        },
+        {
+          "key": "net_income_post_interest",
+          "label": "Net income is post-interest and belongs to equity"
+        },
+        {
+          "key": "leverage_distortion",
+          "label": "A mismatched multiple varies with leverage rather than performance"
+        },
+        {
+          "key": "other_pairings",
+          "label": "Revenue and EBIT pair with EV; EPS and book value pair with equity value"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "states_rule_no_reason",
+          "label": "Stating the pairing rule without the underlying logic"
+        },
+        {
+          "key": "misses_consequence",
+          "label": "Not explaining what goes wrong when they are mixed"
+        },
+        {
+          "key": "wrong_ebit_pairing",
+          "label": "Pairing EBIT with equity value"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The consequence half of the question is frequently skipped. An answer that states the rule correctly but never says why a mismatched multiple is misleading is Developing.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "eev-003-cash-raise",
+      "category_slug": "enterprise-equity-value",
+      "subcategory": "The bridge",
+      "difficulty": 3,
+      "prompt": "A company raises $500m of debt and holds it in cash. What happens to enterprise value and equity value?",
+      "ideal_answer": "In theory neither changes. Enterprise value rises by the $500m of new debt and falls by the $500m of new cash, so the two adjustments cancel and enterprise value is unchanged. Equity value is also unchanged, because the company has simply swapped one balance sheet item for another and no value has been created or destroyed by the transaction itself; shareholders own a business with more debt and exactly enough extra cash to repay it. That is the clean answer and it is the one the question is testing. In practice a few things can move. Issuance fees are a real cash cost, so both measures fall slightly. The market may re-rate the equity if it reads the raise as a signal, positively if it funds an accretive use of capital, negatively if it suggests distress or that cash will be spent poorly. And there can be a tax effect from the interest deduction on the new debt, which raises firm value under a classical trade-off view, offset by higher expected financial distress costs. But absent those, the mechanical answer is that both are unchanged.",
+      "expected_concepts": [
+        {
+          "key": "ev_unchanged",
+          "label": "Enterprise value is unchanged: debt and cash adjustments offset"
+        },
+        {
+          "key": "equity_unchanged",
+          "label": "Equity value is unchanged; no value is created by the swap"
+        },
+        {
+          "key": "balance_sheet_swap",
+          "label": "The transaction is an exchange of balance sheet items"
+        },
+        {
+          "key": "real_world_caveats",
+          "label": "Fees, signalling, or the interest tax shield can move it in practice"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "ev_rises",
+          "label": "Saying enterprise value rises because debt rose, forgetting the cash offset"
+        },
+        {
+          "key": "equity_falls",
+          "label": "Saying equity value falls because the company is more levered"
+        },
+        {
+          "key": "no_caveats",
+          "label": "Giving only the mechanical answer with no sense of what would change it"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The mechanical answer is the core. Caveats are a genuine plus but must come after the correct base answer, not instead of it.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "eev-004-diluted-shares",
+      "category_slug": "enterprise-equity-value",
+      "subcategory": "Share count",
+      "difficulty": 3,
+      "prompt": "Why do you use diluted rather than basic shares outstanding, and how does the treasury stock method work?",
+      "ideal_answer": "You use diluted shares because equity value should reflect every claim on the equity, not only shares issued today. Options, warrants, restricted stock units and convertible securities all become shares under the right conditions, and an acquirer has to settle them, so ignoring them understates the true cost of the equity. The treasury stock method handles options and warrants. For each in-the-money tranche you assume the holder exercises, paying the strike price to the company, and you assume the company immediately uses that cash to buy back shares at the current market price. The net new share count is the number of options exercised less the shares repurchased, which equals the number of options times one minus the strike divided by the market price. Out-of-the-money options are excluded because a rational holder would not exercise them. Convertible debt is handled separately with the if-converted method: if it is in the money you add the underlying shares and remove the associated interest expense from earnings, and if it is out of the money you treat it as ordinary debt in the bridge. Restricted stock units are typically added in full since they carry no strike price.",
+      "expected_concepts": [
+        {
+          "key": "all_equity_claims",
+          "label": "Diluted count captures every claim on the equity"
+        },
+        {
+          "key": "tsm_mechanics",
+          "label": "Exercise proceeds are assumed used to repurchase shares at market"
+        },
+        {
+          "key": "net_new_shares",
+          "label": "Net dilution is options less shares repurchased with the proceeds"
+        },
+        {
+          "key": "only_in_the_money",
+          "label": "Only in-the-money instruments are included"
+        },
+        {
+          "key": "convertibles_separate",
+          "label": "Convertibles use the if-converted method, not the treasury stock method"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "adds_all_options",
+          "label": "Adding the full option count with no repurchase offset"
+        },
+        {
+          "key": "includes_otm",
+          "label": "Including out-of-the-money options"
+        },
+        {
+          "key": "converts_wrongly",
+          "label": "Applying the treasury stock method to convertible debt"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The net-share formula is the technical core. Correct treatment of convertibles distinguishes a strong answer.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "eev-005-negative-ev",
+      "category_slug": "enterprise-equity-value",
+      "subcategory": "Edge cases",
+      "difficulty": 4,
+      "prompt": "Can enterprise value be negative? What would that tell you, and would you buy the company?",
+      "ideal_answer": "Yes. Enterprise value is negative when net cash exceeds market capitalisation, which happens most often in distressed companies, cash-rich shells after an asset sale, and small caps the market has abandoned. Naively it looks like free money: you buy the equity and the cash on the balance sheet more than covers the purchase price. In practice several things usually explain it. The operating business may be burning cash fast enough that the market expects the cash pile to be consumed, so the negative enterprise value is a forecast of future losses rather than a mispricing. The cash may not be accessible: trapped in foreign subsidiaries with a repatriation tax cost, restricted by debt covenants, held against regulatory capital requirements, or already committed to a legal settlement or restructuring. There may be off-balance-sheet or contingent liabilities such as litigation or pension shortfalls that are real claims but do not appear in net debt. And governance may be the issue, where management refuses to return the cash and there is no realistic path to forcing them. So it is a screening signal worth investigating, not a conclusion. I would want to see the cash burn rate, where the cash actually sits, the covenant and tax constraints on moving it, contingent liabilities, and whether any shareholder has the standing to force a return of capital.",
+      "expected_concepts": [
+        {
+          "key": "net_cash_exceeds_mcap",
+          "label": "It occurs when net cash exceeds market capitalisation"
+        },
+        {
+          "key": "cash_burn",
+          "label": "The market may be pricing in future cash burn"
+        },
+        {
+          "key": "trapped_cash",
+          "label": "Cash may be trapped, restricted, or committed"
+        },
+        {
+          "key": "contingent_liabilities",
+          "label": "Off-balance-sheet or contingent claims may not appear in net debt"
+        },
+        {
+          "key": "governance",
+          "label": "Management may not return the cash to shareholders"
+        },
+        {
+          "key": "screen_not_conclusion",
+          "label": "It is a screening signal requiring investigation, not a buy signal"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "says_impossible",
+          "label": "Claiming enterprise value cannot be negative"
+        },
+        {
+          "key": "free_money",
+          "label": "Treating it as an obvious arbitrage"
+        },
+        {
+          "key": "no_diligence",
+          "label": "Giving no idea of what to check before acting"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Tests commercial judgement more than mechanics. A candidate who says yes and gives at least two credible reasons the market is not wrong is at least Developing; Strong requires a diligence plan.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "val-001-three-methods",
+      "category_slug": "valuation",
+      "subcategory": "Methodology",
+      "difficulty": 1,
+      "prompt": "What are the main valuation methodologies, and which typically produces the highest value?",
+      "ideal_answer": "The three standard approaches are trading comparables, precedent transactions, and discounted cash flow, often shown together on a football field alongside an LBO analysis, which acts as a floor rather than a valuation in its own right. Trading comparables value the company against public peers on multiples such as EV/EBITDA and price to earnings, reflecting where the market prices a minority stake today. Precedent transactions use multiples paid in completed M&A deals for similar companies, so they include a control premium and often synergy value, which is why they usually come in above trading comparables. A DCF values the business on its own projected cash flows discounted at the weighted average cost of capital, so it is intrinsic rather than relative and is highly sensitive to the discount rate and terminal assumptions. As a rough ordering, precedents tend to be highest because of the control premium, a DCF is often next and can be highest when the analyst's assumptions are aggressive, trading comparables sit below precedents, and an LBO typically produces the lowest number because a financial sponsor needs a target return with no strategic synergies. That ordering is a tendency, not a rule, and it inverts regularly depending on where the market is in its cycle.",
+      "expected_concepts": [
+        {
+          "key": "names_methods",
+          "label": "Names comparables, precedents, and DCF"
+        },
+        {
+          "key": "control_premium",
+          "label": "Precedents include a control premium"
+        },
+        {
+          "key": "dcf_intrinsic",
+          "label": "A DCF is intrinsic rather than relative"
+        },
+        {
+          "key": "lbo_floor",
+          "label": "An LBO sets a floor rather than a valuation"
+        },
+        {
+          "key": "ordering_is_tendency",
+          "label": "The ordering is a tendency, not a rule"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "states_ordering_as_law",
+          "label": "Presenting the ordering as an absolute rule"
+        },
+        {
+          "key": "omits_lbo",
+          "label": "Omitting the LBO floor"
+        },
+        {
+          "key": "no_why",
+          "label": "Listing methods without saying what each measures"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Very common opener. The nuance that the ordering is a tendency is what separates a memorised answer from an understood one.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "val-002-comp-selection",
+      "category_slug": "valuation",
+      "subcategory": "Comparable companies",
+      "difficulty": 2,
+      "prompt": "How do you select comparable companies, and what do you do when there are no good comps?",
+      "ideal_answer": "You screen on the characteristics that drive the multiple rather than on superficial similarity. That means the same industry and business model, similar size measured by revenue or market capitalisation, comparable growth rate, comparable margin profile and returns on capital, similar end markets and customer concentration, and similar geographic exposure. Capital intensity and the cash conversion profile matter because they drive how much of EBITDA becomes free cash flow. You also want a similar risk profile and, ideally, comparable liquidity and analyst coverage, since a thinly traded stock can price oddly. When there are no good comps you have several options. You can widen the set geographically or into adjacent business models and then adjust explicitly for the differences, such as applying a discount for lower growth. You can use a sum-of-the-parts approach, valuing each segment against its own comp set, which is often the right answer for a conglomerate. You can lean more on the DCF, since it does not require peers. You can use precedent transactions in the space even if no public pure play exists. And you can regress the multiple against its key driver, growth for example, across a wider universe and read the target off the regression line. The important discipline is to say out loud which differences you are adjusting for rather than pretending a loose comp set is tight.",
+      "expected_concepts": [
+        {
+          "key": "business_similarity",
+          "label": "Same industry, business model, and end markets"
+        },
+        {
+          "key": "financial_similarity",
+          "label": "Similar size, growth, margins, and returns"
+        },
+        {
+          "key": "sum_of_parts",
+          "label": "Sum-of-the-parts for a multi-segment business"
+        },
+        {
+          "key": "widen_and_adjust",
+          "label": "Widening the set and adjusting explicitly for differences"
+        },
+        {
+          "key": "lean_on_dcf",
+          "label": "Relying more on intrinsic valuation when peers are poor"
+        },
+        {
+          "key": "state_adjustments",
+          "label": "Making the adjustments explicit rather than implicit"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "industry_only",
+          "label": "Screening on industry alone"
+        },
+        {
+          "key": "no_fallback",
+          "label": "Having no answer for the no-comps case"
+        },
+        {
+          "key": "ignores_growth_margin",
+          "label": "Ignoring growth and margins, the main multiple drivers"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Two-part question and the second part is where most answers thin out. Credit any two credible fallbacks.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "val-003-premium-multiple",
+      "category_slug": "valuation",
+      "subcategory": "Multiple drivers",
+      "difficulty": 3,
+      "prompt": "Two companies in the same industry have identical EBITDA. One trades at 12x and the other at 7x. What explains the gap?",
+      "ideal_answer": "Identical EBITDA today says nothing about the future, and a multiple is a claim about the future, so almost everything that matters is outside that one number. Growth is usually the largest factor: a business compounding EBITDA at fifteen percent deserves a higher multiple than one that is flat, because the buyer is paying for tomorrow's earnings. Quality of earnings matters next, meaning how much of EBITDA converts to free cash flow after capital expenditure and working capital, since a capital-intensive business retains far less. Then margin trajectory and returns on invested capital, revenue durability including recurring versus one-off mix and customer concentration, and competitive position and barriers to entry. Balance sheet risk and leverage affect the equity's risk even though EBITDA is pre-interest, and severe leverage can compress the multiple through distress risk. Management quality, governance, and controlling shareholders matter, as does the accounting: one company's EBITDA may be adjusted with generous add-backs while the other's is clean, so the two figures are not actually the same measure. Practical factors also intrude, including index membership, float and liquidity, analyst coverage, and whether one is seen as an acquisition target. I would want to normalise both EBITDA definitions first, then decompose the gap into growth, cash conversion, and risk before concluding anything about mispricing.",
+      "expected_concepts": [
+        {
+          "key": "growth_differential",
+          "label": "Different growth outlooks"
+        },
+        {
+          "key": "cash_conversion",
+          "label": "Different conversion of EBITDA into free cash flow"
+        },
+        {
+          "key": "earnings_quality",
+          "label": "Different earnings quality, including EBITDA add-backs"
+        },
+        {
+          "key": "risk_and_durability",
+          "label": "Different revenue durability, concentration, or competitive position"
+        },
+        {
+          "key": "leverage_and_balance_sheet",
+          "label": "Balance sheet risk and leverage"
+        },
+        {
+          "key": "technical_factors",
+          "label": "Liquidity, float, coverage, or takeover speculation"
+        },
+        {
+          "key": "normalise_first",
+          "label": "Normalising both EBITDA definitions before comparing"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "growth_only",
+          "label": "Naming growth and stopping"
+        },
+        {
+          "key": "assumes_mispricing",
+          "label": "Concluding the cheap one is mispriced"
+        },
+        {
+          "key": "ignores_definition",
+          "label": "Assuming both EBITDA figures are measured the same way"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Breadth matters here, but so does the instinct to check that the two EBITDA figures are comparable at all. That check is the mark of someone who has done the work rather than read about it.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "val-004-precedents-vs-trading",
+      "category_slug": "valuation",
+      "subcategory": "Precedent transactions",
+      "difficulty": 3,
+      "prompt": "When would you weight precedent transactions more heavily than trading comparables, and what are their weaknesses?",
+      "ideal_answer": "You weight precedents more heavily when you are valuing control. In a sale process, a take-private, or any situation where the buyer acquires the whole company, what a minority stake trades for in the public market understates what an acquirer must pay, and precedents capture the control premium directly. They are also more useful when the public comp set is thin or when the sector has recently seen genuinely comparable deals, and they carry real weight with boards because they are evidence of what someone actually paid rather than a modelled view. The weaknesses are significant. Deals are point-in-time, so a transaction from a different part of the credit or M&A cycle may be irrelevant to today's financing conditions. Every deal has idiosyncratic drivers, including a strategic buyer paying for specific synergies, a competitive auction, or a distressed seller, and those are not repeatable. Disclosure is often incomplete, especially for private targets, so you may not know the exact financials the multiple was calculated on or whether the figure was pre- or post-synergy. The sample size is usually small, so a single outlier moves the median. And announced multiples may reflect a projected forward year that never materialised. The practical discipline is to use a narrow time window, understand the specific circumstances of each deal, and present a range rather than a point estimate.",
+      "expected_concepts": [
+        {
+          "key": "control_situations",
+          "label": "Weighted more heavily when valuing control"
+        },
+        {
+          "key": "control_premium",
+          "label": "They embed a control premium that trading comps do not"
+        },
+        {
+          "key": "point_in_time",
+          "label": "Deals reflect the market and credit conditions of their moment"
+        },
+        {
+          "key": "deal_specific_drivers",
+          "label": "Synergies, auctions, and distress make deals idiosyncratic"
+        },
+        {
+          "key": "disclosure_limits",
+          "label": "Incomplete disclosure, especially for private targets"
+        },
+        {
+          "key": "small_sample",
+          "label": "Small samples make the median unstable"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "no_weaknesses",
+          "label": "Explaining when to use them but naming no weaknesses"
+        },
+        {
+          "key": "ignores_timing",
+          "label": "Ignoring that deal multiples are cycle-dependent"
+        },
+        {
+          "key": "confuses_premium",
+          "label": "Confusing the control premium with the synergy value"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Both halves are required for Strong. Naming the control premium alone is a Developing answer.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "val-005-unprofitable-company",
+      "category_slug": "valuation",
+      "subcategory": "Special situations",
+      "difficulty": 4,
+      "prompt": "How would you value a fast-growing company with negative EBITDA and no comparable public peers?",
+      "ideal_answer": "Earnings multiples are unusable, so I would triangulate from several angles rather than trusting one. First, revenue multiples adjusted for growth and gross margin, since EV/revenue is only meaningful when you control for how profitable that revenue eventually becomes; a growth-adjusted measure or a regression of EV/revenue against growth across a wider universe is more defensible than a raw median. Second, a DCF built to a normalised steady state, projecting explicitly through the loss-making years to the point where margins mature, and being honest that the value is concentrated in the terminal assumptions and therefore highly sensitive. Third, unit economics: value the existing customer base on contribution margin and retention to get lifetime value, compare it to customer acquisition cost, and separate the value of the installed base from the value of future growth. That decomposition is powerful because it tells you how much of the price is already earned versus speculative. Fourth, private market evidence from recent funding rounds and precedent transactions for similar businesses, with the caveat that round pricing includes liquidation preferences and other structure that make headline valuations overstated. Fifth, a sum-of-the-parts if segments mature at different rates. I would also run a scenario or probability-weighted analysis rather than a point estimate, because the distribution of outcomes is genuinely wide, and I would state clearly which assumptions the answer actually depends on.",
+      "expected_concepts": [
+        {
+          "key": "revenue_multiples",
+          "label": "Revenue multiples adjusted for growth and gross margin"
+        },
+        {
+          "key": "dcf_to_normalised",
+          "label": "A DCF projecting to a normalised steady state"
+        },
+        {
+          "key": "unit_economics",
+          "label": "Unit economics: lifetime value against acquisition cost"
+        },
+        {
+          "key": "installed_base_split",
+          "label": "Separating the value of the existing base from future growth"
+        },
+        {
+          "key": "private_market_evidence",
+          "label": "Funding rounds and private transactions, with structure caveats"
+        },
+        {
+          "key": "scenario_analysis",
+          "label": "Scenario or probability-weighted analysis rather than a point estimate"
+        },
+        {
+          "key": "state_assumptions",
+          "label": "Being explicit about which assumptions drive the answer"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "revenue_multiple_only",
+          "label": "Offering a revenue multiple with no adjustment or cross-check"
+        },
+        {
+          "key": "false_precision",
+          "label": "Producing a point estimate with no acknowledgement of the range"
+        },
+        {
+          "key": "ignores_round_structure",
+          "label": "Taking headline funding round valuations at face value"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The strongest answers triangulate and are explicit about uncertainty. A single method, however well executed, is Developing.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "dcf-001-walkthrough",
+      "category_slug": "dcf",
+      "subcategory": "Mechanics",
+      "difficulty": 1,
+      "prompt": "Walk me through a DCF.",
+      "ideal_answer": "You project unlevered free cash flow for an explicit forecast period, usually five to ten years. Unlevered free cash flow is EBIT less taxes on EBIT, which gives net operating profit after tax, plus depreciation and amortisation and other non-cash charges, less capital expenditure, less the increase in net working capital. It is unlevered because it is before interest, so it represents cash available to all capital providers. You discount those cash flows at the weighted average cost of capital, which blends the after-tax cost of debt and the cost of equity at target weights, with the cost of equity typically from CAPM. You then calculate a terminal value at the end of the forecast period, either with the Gordon growth method, taking the final year's free cash flow grown at a perpetual rate and divided by WACC less that growth rate, or with an exit multiple applied to terminal-year EBITDA, and you discount that back as well. The sum of the discounted cash flows and the discounted terminal value is enterprise value. From enterprise value you subtract net debt and other senior claims to reach equity value, and divide by diluted shares for value per share. Finally you sensitise the output on WACC and on the terminal assumption, because those two drive most of the answer.",
+      "expected_concepts": [
+        {
+          "key": "unlevered_fcf",
+          "label": "Project unlevered free cash flow"
+        },
+        {
+          "key": "fcf_formula",
+          "label": "EBIT less taxes, plus D&A, less capex, less the working capital increase"
+        },
+        {
+          "key": "wacc_discount",
+          "label": "Discount at the weighted average cost of capital"
+        },
+        {
+          "key": "terminal_value",
+          "label": "Terminal value by Gordon growth or exit multiple"
+        },
+        {
+          "key": "ev_to_equity",
+          "label": "Bridge from enterprise value to equity value"
+        },
+        {
+          "key": "sensitivity",
+          "label": "Sensitise on discount rate and terminal assumption"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "levered_fcf_wacc",
+          "label": "Discounting levered cash flow at WACC, double-counting the financing effect"
+        },
+        {
+          "key": "forgets_terminal",
+          "label": "Omitting terminal value or not discounting it"
+        },
+        {
+          "key": "stops_at_ev",
+          "label": "Stopping at enterprise value without bridging to per-share value"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The most-asked technical in the sector. Order and completeness matter more than elaboration. Discounting the wrong cash flow at the wrong rate is a serious error, not a slip.",
+        "band_thresholds": {
+          "strong": 82,
+          "developing": 58
+        }
+      }
+    },
+    {
+      "source_key": "dcf-002-wacc",
+      "category_slug": "dcf",
+      "subcategory": "Discount rate",
+      "difficulty": 2,
+      "prompt": "How do you calculate WACC, and why do you use the after-tax cost of debt?",
+      "ideal_answer": "WACC is the weighted average of the cost of equity and the after-tax cost of debt, weighted by the market values of equity and debt in the target capital structure rather than book values, because a discount rate should reflect what investors require today. The cost of equity typically comes from CAPM: the risk-free rate, usually a long-dated government bond yield matched to the cash flow horizon, plus beta times the equity risk premium, with a size or country premium added where appropriate. Beta is usually taken from comparable companies, unlevered to strip out each peer's capital structure and then relevered at the target structure, so it reflects the business risk of the subject company at the leverage you are assuming. The cost of debt is the yield the company would pay on new borrowing today, which is the yield to maturity on its traded debt or a rate implied from its credit rating, not the historical coupon on existing debt. You use the after-tax cost of debt because interest is tax deductible, so the true economic cost to the company is the interest less the tax it saves, which is the rate times one minus the marginal tax rate. Equity dividends are not deductible, which is why no equivalent adjustment applies to the cost of equity.",
+      "expected_concepts": [
+        {
+          "key": "market_value_weights",
+          "label": "Weight by market values, not book values"
+        },
+        {
+          "key": "capm",
+          "label": "Cost of equity from CAPM: risk-free plus beta times equity risk premium"
+        },
+        {
+          "key": "unlever_relever_beta",
+          "label": "Unlever peer betas and relever at the target structure"
+        },
+        {
+          "key": "current_cost_of_debt",
+          "label": "Use the current cost of new debt, not historical coupons"
+        },
+        {
+          "key": "tax_deductibility",
+          "label": "Interest is tax deductible, so the after-tax rate is the real cost"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "book_weights",
+          "label": "Using book values of equity to weight the components"
+        },
+        {
+          "key": "historic_coupon",
+          "label": "Using the coupon on existing debt as the cost of debt"
+        },
+        {
+          "key": "no_relevering",
+          "label": "Using peer betas raw without unlevering and relevering"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The tax half of the question is explicit and must be answered. Unlevering and relevering beta is the detail that marks out a well-prepared candidate.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "dcf-003-terminal-value",
+      "category_slug": "dcf",
+      "subcategory": "Terminal value",
+      "difficulty": 3,
+      "prompt": "Your terminal value is 85% of total enterprise value. Is that a problem, and what would you do about it?",
+      "ideal_answer": "It is a signal to investigate rather than an error in itself. Terminal value is commonly sixty to eighty percent of a DCF's value, so eighty-five is high but not absurd, and for a genuinely long-duration business it can be legitimate. The concern is that the valuation then rests almost entirely on assumptions about a period you have not modelled, which makes the analysis fragile and hard to defend. I would check several things. Is the forecast period long enough to reach a steady state? If the company is still growing at twenty percent in the final year, the perpetuity assumption is being applied to a business that has not matured, and extending the forecast is the right fix. Is the perpetual growth rate reasonable, meaning at or below long-run GDP or inflation, since anything above that implies the company eventually becomes the whole economy. Does the terminal year have normalised margins, a sustainable reinvestment rate, and capital expenditure at least equal to depreciation, because a terminal year with capex below depreciation assumes a shrinking asset base supporting perpetual growth. I would cross-check the Gordon growth result against an exit multiple and confirm the implied multiple is sensible against today's trading comparables, and the reverse too. And I would present a sensitivity table on growth and WACC so the reader sees the range rather than one number, plus the implied terminal multiple alongside the output.",
+      "expected_concepts": [
+        {
+          "key": "common_but_high",
+          "label": "A high terminal share is common but this level warrants scrutiny"
+        },
+        {
+          "key": "extend_forecast",
+          "label": "Extend the forecast until the business reaches a steady state"
+        },
+        {
+          "key": "growth_rate_discipline",
+          "label": "Perpetual growth must not exceed long-run economic growth"
+        },
+        {
+          "key": "normalised_terminal_year",
+          "label": "The terminal year must have normalised margins and capex at least equal to depreciation"
+        },
+        {
+          "key": "cross_check_methods",
+          "label": "Cross-check Gordon growth against an implied exit multiple"
+        },
+        {
+          "key": "sensitivity_disclosure",
+          "label": "Present sensitivities rather than a single point"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "says_fine",
+          "label": "Dismissing it as normal with no diagnostic"
+        },
+        {
+          "key": "only_lower_g",
+          "label": "Only proposing to lower the growth rate"
+        },
+        {
+          "key": "no_cross_check",
+          "label": "Not cross-checking the implied exit multiple"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "A diagnostic question. Reward the instinct to check whether the terminal year is a steady state, which is the actual root cause most of the time.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "dcf-004-mid-year",
+      "category_slug": "dcf",
+      "subcategory": "Mechanics",
+      "difficulty": 3,
+      "prompt": "What is the mid-year convention, when would you use it, and roughly how much does it change your valuation?",
+      "ideal_answer": "A standard DCF discounts each year's cash flow as if it all arrives on the final day of that year, using whole-period discount factors of one, two, three and so on. That understates value, because cash actually arrives throughout the year and earlier cash is worth more. The mid-year convention discounts each year's cash flow from the midpoint instead, using factors of one half, one and a half, two and a half and so on, which approximates an even distribution of cash across the year. You would use it for a business with cash flows spread relatively evenly, which is most operating companies, and it is the market standard in many banking groups. You would not use it, or you would adjust it, for a business with heavily seasonal or lumpy cash flows, such as one collecting most receipts in a single quarter, where the midpoint is not representative. The uplift is roughly half a year of discounting, so approximately the discount rate divided by two: at a ten percent WACC it is a little under five percent on enterprise value. The important consistency point is the terminal value. If you use mid-year discounting for the explicit period you must handle the terminal value coherently, discounting a Gordon growth terminal value from the mid-point of the final year or applying a half-year adjustment, since mixing conventions between the explicit period and the terminal value introduces an error larger than the convention itself.",
+      "expected_concepts": [
+        {
+          "key": "definition",
+          "label": "Discounting from the midpoint rather than the year end"
+        },
+        {
+          "key": "rationale",
+          "label": "Cash arrives through the year, so year-end discounting understates value"
+        },
+        {
+          "key": "magnitude",
+          "label": "Uplift is roughly half the discount rate, a few percent"
+        },
+        {
+          "key": "when_not_to_use",
+          "label": "Unsuitable for heavily seasonal or lumpy cash flows"
+        },
+        {
+          "key": "terminal_consistency",
+          "label": "The terminal value must use a consistent convention"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "no_magnitude",
+          "label": "Defining it without any sense of how much it moves the answer"
+        },
+        {
+          "key": "terminal_inconsistency",
+          "label": "Applying it to the explicit period but not the terminal value"
+        },
+        {
+          "key": "wrong_direction",
+          "label": "Saying it lowers the valuation"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The terminal value consistency point is the discriminator. Many candidates know the definition; few flag the mixing error.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "dcf-005-when-not-to-use",
+      "category_slug": "dcf",
+      "subcategory": "Judgment",
+      "difficulty": 4,
+      "prompt": "When is a DCF the wrong tool, and what would you use instead?",
+      "ideal_answer": "A DCF is the wrong tool whenever you cannot forecast cash flows with enough confidence for the output to mean anything, or where the standard framework misstates the economics. For a bank or insurer, unlevered free cash flow is not meaningful because debt is raw material rather than financing and working capital has no comparable meaning; you use a dividend discount model or a residual income model, and value on price to book against return on equity. For an early-stage or pre-revenue company the terminal value is effectively the entire answer and rests on a distribution of outcomes, so venture-style scenario or probability-weighted methods, or real options for a binary outcome such as a drug trial, are more honest. For a cyclical commodity producer, a point-in-time DCF anchors on wherever the cycle happens to sit, so mid-cycle normalised earnings multiples or a net asset value on reserves are better. For a real estate or infrastructure asset, capitalisation rates and net asset value are the market's language. For a distressed company the question is recovery by claim in a restructuring, not going-concern cash flow, so liquidation analysis and waterfall recovery modelling apply. And for a holding company, a sum-of-the-parts with a conglomerate discount is more informative than consolidated cash flow. The general principle is that a DCF is strongest for a mature business with predictable cash flows and a stable capital structure, and progressively weaker as any of those three fail. Even where it is weak it can be worth running in reverse, solving for what the market price implies about growth or margins, which is often more useful than the forward answer.",
+      "expected_concepts": [
+        {
+          "key": "financial_institutions",
+          "label": "Banks and insurers need dividend discount or residual income models"
+        },
+        {
+          "key": "early_stage",
+          "label": "Early-stage companies need scenario or real-options methods"
+        },
+        {
+          "key": "cyclicals",
+          "label": "Cyclicals need mid-cycle normalised earnings or asset value"
+        },
+        {
+          "key": "distressed",
+          "label": "Distressed situations need recovery and waterfall analysis"
+        },
+        {
+          "key": "asset_heavy",
+          "label": "Real estate and infrastructure use cap rates and net asset value"
+        },
+        {
+          "key": "general_principle",
+          "label": "The DCF weakens as predictability and structural stability fall"
+        },
+        {
+          "key": "reverse_dcf",
+          "label": "A reverse DCF can still be informative where a forward one is not"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "one_case_only",
+          "label": "Naming one exception with no general principle"
+        },
+        {
+          "key": "no_alternative",
+          "label": "Saying a DCF is unsuitable without proposing a replacement"
+        },
+        {
+          "key": "banks_wrong_reason",
+          "label": "Excluding banks without explaining why the cash flow definition breaks"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Tests whether the candidate understands what a DCF assumes rather than just how to build one. The general principle is worth as much as the list of cases.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "ma-001-accretion-dilution",
+      "category_slug": "ma-merger-modelling",
+      "subcategory": "Accretion and dilution",
+      "difficulty": 2,
+      "prompt": "What makes a deal accretive or dilutive, and what does that actually tell you about whether it is a good deal?",
+      "ideal_answer": "A deal is accretive when the acquirer's pro forma earnings per share exceed its standalone EPS, and dilutive when they fall. Mechanically, you compare the yield the acquirer gives up on the consideration with the yield it acquires. In an all-stock deal the shorthand is that if the acquirer's price to earnings multiple is higher than the target's, the deal is accretive before synergies, because the acquirer issues relatively few shares to buy relatively more earnings. In a cash deal you compare the after-tax cost of the cash foregone or the debt raised with the target's earnings yield, which is the inverse of its price to earnings multiple; cheap debt in a low-rate environment makes accretion easy. Synergies, incremental interest expense, foregone interest income on cash used, transaction and financing fees, and new intangible amortisation and depreciation from the step-up all adjust the answer. But accretion is a measure of the financing choice as much as the strategic merit, and it says almost nothing about value creation. A company can buy any lower-multiple business with cheap debt and print accretion while destroying value, because it has increased leverage and taken on business risk that EPS does not capture. The right test is whether the return on invested capital of the deal exceeds the cost of capital, and whether the price paid is below the standalone value plus the synergies actually achievable. Accretion matters because the market and boards react to it, not because it is the right measure.",
+      "expected_concepts": [
+        {
+          "key": "eps_comparison",
+          "label": "Accretion is pro forma EPS above standalone EPS"
+        },
+        {
+          "key": "pe_rule_stock",
+          "label": "In stock deals, the relative price to earnings multiples drive the result"
+        },
+        {
+          "key": "cost_of_cash_debt",
+          "label": "In cash deals, compare the after-tax cost of funds to the target's earnings yield"
+        },
+        {
+          "key": "adjustments",
+          "label": "Synergies, interest, fees, and new amortisation adjust the result"
+        },
+        {
+          "key": "not_value_creation",
+          "label": "Accretion is not a measure of value creation"
+        },
+        {
+          "key": "roic_test",
+          "label": "The real test is return on invested capital against cost of capital"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "accretive_equals_good",
+          "label": "Equating accretion with a good deal"
+        },
+        {
+          "key": "forgets_financing_costs",
+          "label": "Ignoring incremental interest, fees, or foregone interest income"
+        },
+        {
+          "key": "no_synergy_treatment",
+          "label": "Omitting synergies from the analysis"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The second half of the question is the point. A mechanically perfect accretion explanation that treats accretion as the goal is Developing at best.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "ma-002-cash-stock-debt",
+      "category_slug": "ma-merger-modelling",
+      "subcategory": "Consideration",
+      "difficulty": 2,
+      "prompt": "How does an acquirer choose between paying with cash, stock, or debt?",
+      "ideal_answer": "The decision balances cost, risk, signalling, and constraints. Cash is usually the cheapest form of consideration because the foregone return on cash sitting on the balance sheet is low, and it gives the target certainty of value, which often means the acquirer can pay a lower headline price. It uses up balance sheet flexibility and any repatriation tax cost has to be considered. Debt is typically the next cheapest, particularly with the interest tax shield, and it preserves existing shareholders' ownership, but it raises leverage, may breach covenants or damage the credit rating, and increases fragility if the integration disappoints. Stock is generally the most expensive form of consideration since the cost of equity exceeds the cost of debt, and it dilutes existing owners, but it preserves cash and debt capacity, shares integration risk with the target's shareholders, and is often the only option for a very large deal. Signalling matters: issuing stock is commonly read as management believing its own shares are expensive, which is why stock-funded deals often see the acquirer's price fall on announcement. The target's preference matters too, since a taxable cash sale triggers immediate tax for its shareholders while an all-stock deal can often be structured as a tax-free reorganisation, and a target that believes in the combination may want stock to participate in the upside. In practice most large deals are a mix, and the choice is constrained by what the acquirer can actually raise.",
+      "expected_concepts": [
+        {
+          "key": "relative_cost",
+          "label": "Cash is cheapest, then debt, with stock the most expensive"
+        },
+        {
+          "key": "tax_shield",
+          "label": "Debt carries an interest tax shield"
+        },
+        {
+          "key": "risk_sharing",
+          "label": "Stock shares integration risk with the target's shareholders"
+        },
+        {
+          "key": "signalling",
+          "label": "Issuing stock signals management thinks shares are expensive"
+        },
+        {
+          "key": "target_tax_treatment",
+          "label": "Cash is taxable to target shareholders; stock can be tax-deferred"
+        },
+        {
+          "key": "capacity_constraints",
+          "label": "Credit rating, covenants, and raise capacity constrain the choice"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "cost_only",
+          "label": "Ranking by cost with no discussion of risk or signalling"
+        },
+        {
+          "key": "ignores_target",
+          "label": "Ignoring what the target's shareholders want"
+        },
+        {
+          "key": "no_constraints",
+          "label": "Treating it as a free choice with no financing constraints"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Reward answers that consider both sides of the transaction. The target's tax treatment is frequently missed and is a strong signal of real preparation.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "ma-003-purchase-accounting",
+      "category_slug": "ma-merger-modelling",
+      "subcategory": "Purchase accounting",
+      "difficulty": 3,
+      "prompt": "Walk me through purchase accounting and how goodwill is created.",
+      "ideal_answer": "On closing, the target's historical equity is eliminated and its assets and liabilities are recorded on the acquirer's balance sheet at fair value rather than book value. That revaluation is the write-up: property, plant and equipment is marked to fair value, and previously unrecognised identifiable intangibles such as customer relationships, trade names, technology and order backlog are recognised, because the target could not capitalise internally generated intangibles but the acquirer must recognise them when they are acquired. A deferred tax liability is typically recorded on the write-ups where the step-up is not deductible for tax, since book value now exceeds tax basis. Goodwill is the plug: purchase equity consideration less the fair value of net identifiable assets acquired, including the newly recognised intangibles and net of the deferred tax liability. It represents what the acquirer paid above identifiable value, which economically is assembled workforce, expected synergies, and the control premium. Going forward, the identifiable intangibles amortise over their useful lives, which reduces reported earnings and is the main source of dilution people forget, while goodwill is not amortised under US GAAP or IFRS but is tested for impairment at least annually. A write-off of goodwill is a non-cash charge and is effectively an admission that the acquirer overpaid.",
+      "expected_concepts": [
+        {
+          "key": "fair_value_step_up",
+          "label": "Assets and liabilities are recorded at fair value"
+        },
+        {
+          "key": "identifiable_intangibles",
+          "label": "Previously unrecognised intangibles are recognised"
+        },
+        {
+          "key": "goodwill_is_plug",
+          "label": "Goodwill is consideration less fair value of net identifiable assets"
+        },
+        {
+          "key": "deferred_tax_liability",
+          "label": "A deferred tax liability arises on non-deductible write-ups"
+        },
+        {
+          "key": "amortisation_vs_impairment",
+          "label": "Intangibles amortise; goodwill is impairment-tested, not amortised"
+        },
+        {
+          "key": "eliminate_target_equity",
+          "label": "The target's historical equity is eliminated"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "goodwill_over_book",
+          "label": "Defining goodwill as price over book value rather than over fair value of net identifiable assets"
+        },
+        {
+          "key": "amortises_goodwill",
+          "label": "Saying goodwill is amortised"
+        },
+        {
+          "key": "forgets_dtl",
+          "label": "Omitting the deferred tax liability on the step-up"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The deferred tax liability and the amortisation-versus-impairment distinction are the two details that separate a strong answer. Defining goodwill against book value rather than fair value is a real error.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "ma-004-synergies",
+      "category_slug": "ma-merger-modelling",
+      "subcategory": "Synergies",
+      "difficulty": 3,
+      "prompt": "How would you evaluate management's claim of $200m of annual synergies, and how much should the acquirer pay for them?",
+      "ideal_answer": "First I would separate cost synergies from revenue synergies, because they are not equally credible. Cost synergies are largely within management's control and come from identifiable actions: overlapping headcount, duplicate facilities, procurement scale, and consolidated back office and public company costs. They can be diligenced bottom-up, line by line, and historically they are achieved reasonably often. Revenue synergies from cross-selling or pricing are much less reliable, arrive later, and are frequently offset by customer attrition and sales force disruption during integration, so I would discount them heavily or exclude them from what the acquirer pays for. Then I would test the $200m against benchmarks: what percentage of the combined cost base is it, how does that compare to synergies realised in precedent deals in the sector, and is the overlap large enough to support it. I would look at phasing and the costs to achieve, because synergies that take four years and cost $300m in restructuring charges to realise are worth far less than the headline; the right measure is the present value of the after-tax synergy stream net of costs to achieve, discounted at an appropriate rate. On what to pay, the principle is that synergies are the acquirer's value creation, not the target's. Paying the full present value of synergies in the premium transfers all of the benefit to the target's shareholders, so the acquirer keeps nothing for the risk it is taking. In practice competitive pressure in an auction forces some share across, but a disciplined acquirer keeps a meaningful portion and walks when the price implies paying for revenue synergies it does not control.",
+      "expected_concepts": [
+        {
+          "key": "cost_vs_revenue",
+          "label": "Cost synergies are far more credible than revenue synergies"
+        },
+        {
+          "key": "bottom_up_diligence",
+          "label": "Cost synergies can be diligenced line by line"
+        },
+        {
+          "key": "costs_to_achieve",
+          "label": "Costs to achieve and phasing reduce the value materially"
+        },
+        {
+          "key": "present_value",
+          "label": "Value the after-tax synergy stream on a present value basis"
+        },
+        {
+          "key": "benchmarking",
+          "label": "Benchmark against the combined cost base and precedent deals"
+        },
+        {
+          "key": "who_captures_value",
+          "label": "Paying the full synergy value transfers all the benefit to the seller"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "treats_all_equal",
+          "label": "Treating revenue and cost synergies as equally credible"
+        },
+        {
+          "key": "ignores_costs_to_achieve",
+          "label": "Valuing the headline number with no costs to achieve"
+        },
+        {
+          "key": "pay_full_value",
+          "label": "Concluding the acquirer should pay the full synergy value"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The value-capture point at the end is the commercial judgement being tested. A rigorous valuation of synergies that then hands them all to the seller misses the question.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "ma-005-deal-failure",
+      "category_slug": "ma-merger-modelling",
+      "subcategory": "Judgment",
+      "difficulty": 4,
+      "prompt": "Most large acquisitions fail to create value for the acquirer. Why, and what would make you more confident in a specific deal?",
+      "ideal_answer": "The dominant cause is price: in a competitive auction the winner is by construction the bidder with the most optimistic assumptions, so the premium often exceeds the value the acquirer can actually create. Overconfidence compounds it, with management teams systematically overestimating synergies and underestimating integration difficulty and time. Integration itself is a second cluster of causes, including culture clashes, the departure of key people during uncertainty, systems consolidation running years late, and the distraction of the core business while leadership focuses on the deal. Third, incentives are frequently misaligned, since executive pay is often tied to size rather than to returns on capital, and a large deal can be personally rewarding to management even when it destroys shareholder value. Fourth, deals are often done at the top of the cycle, when both confidence and asset prices peak, and the acquirer then carries the multiple down through the cycle. Fifth, revenue synergies that justified the price rarely materialise. What would increase my confidence in a specific deal: a bilateral rather than auction process, or evidence of genuine bidding discipline with a stated walk-away price; a moderate premium relative to sector precedents; synergies weighted to cost rather than revenue, with a bottom-up build and named accountable owners; an acquirer with a track record of integrating similar deals and a bolt-on rather than transformational profile; a clear strategic logic that is specific rather than a general claim about scale; management compensation tied to return on invested capital; a deal small enough relative to the acquirer that failure is survivable; and a financing structure that leaves headroom if the integration takes longer than planned.",
+      "expected_concepts": [
+        {
+          "key": "winners_curse",
+          "label": "Auction dynamics mean the winner has the most optimistic assumptions"
+        },
+        {
+          "key": "overpayment",
+          "label": "The premium often exceeds the value that can be created"
+        },
+        {
+          "key": "integration_risk",
+          "label": "Culture, key-person attrition, and systems integration"
+        },
+        {
+          "key": "misaligned_incentives",
+          "label": "Executive incentives reward size rather than returns"
+        },
+        {
+          "key": "cycle_timing",
+          "label": "Deals cluster at the top of the cycle"
+        },
+        {
+          "key": "confidence_factors",
+          "label": "Names specific factors that would increase confidence"
+        },
+        {
+          "key": "track_record",
+          "label": "Acquirer's demonstrated integration track record"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "culture_only",
+          "label": "Attributing failure entirely to culture"
+        },
+        {
+          "key": "no_second_half",
+          "label": "Explaining failure but never answering what would build confidence"
+        },
+        {
+          "key": "generic_answer",
+          "label": "Generic answers with no specific, checkable factors"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "This is a judgement question testing whether the candidate thinks like a principal. The second half must be specific and checkable, not a restatement of the first.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "lbo-001-what-is-lbo",
+      "category_slug": "lbo-private-equity",
+      "subcategory": "Mechanics",
+      "difficulty": 1,
+      "prompt": "What is an LBO, and what makes a company a good LBO candidate?",
+      "ideal_answer": "A leveraged buyout is the acquisition of a company using a large proportion of debt and a comparatively small equity cheque, where the acquired company's own cash flows service and repay that debt and its assets typically secure it. A financial sponsor holds the business for roughly three to seven years, uses cash generation to pay down debt, improves the operations, and exits by sale to a strategic buyer, sale to another sponsor, or an IPO. Returns come from three sources: deleveraging, since debt repaid converts directly into equity value; EBITDA growth through revenue growth and margin improvement; and multiple expansion, which is the least controllable and the least creditworthy to underwrite. A good candidate has stable, predictable cash flows so debt service is not at risk, which usually means a mature business in a non-cyclical sector with recurring or contracted revenue. It has low existing leverage so there is capacity to add debt, modest capital expenditure needs so cash flow is available for debt paydown rather than reinvestment, strong and defensible margins, a real competitive moat, hard assets or reliable cash flow to support the debt, an identifiable path to operational improvement, a credible exit route, and a management team willing to run a levered business. Companies with volatile or cyclical earnings, heavy capital intensity, high customer concentration, or technology risk are poor candidates because a downturn threatens covenant compliance.",
+      "expected_concepts": [
+        {
+          "key": "definition",
+          "label": "Acquisition funded largely with debt serviced by the target's cash flows"
+        },
+        {
+          "key": "return_drivers",
+          "label": "Deleveraging, EBITDA growth, and multiple expansion"
+        },
+        {
+          "key": "stable_cash_flows",
+          "label": "Predictable cash flow is the primary criterion"
+        },
+        {
+          "key": "low_capex",
+          "label": "Low capital intensity leaves cash available for debt paydown"
+        },
+        {
+          "key": "debt_capacity",
+          "label": "Low existing leverage leaves room to add debt"
+        },
+        {
+          "key": "exit_route",
+          "label": "A credible exit is required at entry"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "growth_company",
+          "label": "Naming a high-growth, cash-burning company as a good candidate"
+        },
+        {
+          "key": "one_return_driver",
+          "label": "Naming only deleveraging as a return driver"
+        },
+        {
+          "key": "no_exit",
+          "label": "Not mentioning the exit"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Foundational for PE recruiting. All three return drivers should appear for a Strong answer.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "lbo-002-returns-drivers",
+      "category_slug": "lbo-private-equity",
+      "subcategory": "Returns",
+      "difficulty": 2,
+      "prompt": "A sponsor buys a company for 10x EBITDA with 6x of debt and exits five years later at 10x. EBITDA grows from $100m to $150m. Roughly what is the money multiple, and where did the return come from?",
+      "ideal_answer": "At entry, enterprise value is ten times one hundred million, so one billion, funded with six hundred million of debt and four hundred million of sponsor equity. At exit, EBITDA is one hundred and fifty million at ten times, so enterprise value is one and a half billion. If the business generated cash to repay, say, two hundred and fifty million of debt over the five years, net debt at exit is three hundred and fifty million and exit equity is one point one five billion. That is roughly a 2.9x money multiple on the four hundred million invested, which corresponds to an internal rate of return of about twenty-three percent over five years. Decomposing it: EBITDA growth of fifty million at the ten times exit multiple contributes five hundred million of enterprise value, and debt paydown of two hundred and fifty million converts directly into equity value. Multiple expansion contributes nothing here because entry and exit multiples are equal, which is the deliberate point of the question, and the leverage itself is what magnifies the EBITDA growth into a much larger percentage return on a small equity base. The sensitivity worth naming is that the answer depends heavily on how much cash the business actually generates for debt paydown, which depends on capital expenditure, working capital, cash interest, and cash taxes, and that a one-turn change in the exit multiple moves exit equity by a hundred and fifty million, or roughly a third of the original equity cheque.",
+      "expected_concepts": [
+        {
+          "key": "entry_equity",
+          "label": "Entry equity is enterprise value less debt: $400m"
+        },
+        {
+          "key": "exit_ev",
+          "label": "Exit enterprise value is exit EBITDA times the exit multiple: $1.5bn"
+        },
+        {
+          "key": "debt_paydown",
+          "label": "Cash generated repays debt and converts into equity value"
+        },
+        {
+          "key": "multiple_math",
+          "label": "Computes a money multiple in the region of 2.5x to 3x"
+        },
+        {
+          "key": "no_multiple_expansion",
+          "label": "Identifies that multiple expansion contributes nothing here"
+        },
+        {
+          "key": "leverage_effect",
+          "label": "Leverage magnifies EBITDA growth on a small equity base"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "forgets_paydown",
+          "label": "Ignoring debt paydown entirely"
+        },
+        {
+          "key": "arithmetic_error",
+          "label": "Errors in the entry or exit equity calculation"
+        },
+        {
+          "key": "no_decomposition",
+          "label": "Producing a number without attributing it to the drivers"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Paper-LBO style. Any reasonable debt paydown assumption is acceptable provided it is stated; the decomposition matters more than the exact multiple. Reward a stated assumption over a confident unexplained number.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "lbo-003-debt-tranches",
+      "category_slug": "lbo-private-equity",
+      "subcategory": "Capital structure",
+      "difficulty": 3,
+      "prompt": "Walk me through the debt in a typical LBO capital structure and why a sponsor uses several tranches rather than one.",
+      "ideal_answer": "From the top of the structure down: a revolving credit facility for working capital, usually undrawn at close and priced on a commitment fee; then senior secured term loans, historically split into an amortising term loan A held by banks and a bullet term loan B held by institutional investors, secured on the assets, floating rate, and the cheapest debt in the structure; then second lien debt, secured but subordinated in the waterfall; then senior unsecured notes or high yield bonds, typically fixed rate with a longer bullet maturity and looser incurrence-based covenants; then subordinated or mezzanine debt, often with payment-in-kind interest and sometimes warrants; and finally sponsor equity, plus any management rollover and preferred instruments. The reason for tranching is that different investors price risk differently and have different mandates, so the sponsor can sell each slice of risk to whoever charges least for it. Banks and loan funds want secured floating-rate paper with maintenance covenants; high yield funds accept subordination for a higher fixed coupon; mezzanine investors accept the most risk for equity-like returns. Slicing the structure raises more total debt at a lower blended cost than a single instrument would. Tranching also lets the sponsor shape the cash profile, using amortisation early where cash flow is strong and bullets where it is not, and paying in kind on the most junior debt to protect near-term liquidity. The trade-off is complexity, intercreditor negotiation, higher fees, and a harder restructuring if things go wrong.",
+      "expected_concepts": [
+        {
+          "key": "seniority_order",
+          "label": "Correct seniority from revolver and term loans down to mezzanine and equity"
+        },
+        {
+          "key": "secured_vs_unsecured",
+          "label": "Distinguishes secured from unsecured and subordinated debt"
+        },
+        {
+          "key": "pricing_by_risk",
+          "label": "Cost rises with subordination"
+        },
+        {
+          "key": "different_investor_bases",
+          "label": "Different tranches are sold to different investor bases"
+        },
+        {
+          "key": "lower_blended_cost",
+          "label": "Tranching raises more debt at a lower blended cost"
+        },
+        {
+          "key": "cash_profile_shaping",
+          "label": "Amortisation, bullets, and PIK shape the cash profile"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "wrong_order",
+          "label": "Getting the seniority order wrong"
+        },
+        {
+          "key": "no_reason_for_tranching",
+          "label": "Listing tranches without explaining why more than one is used"
+        },
+        {
+          "key": "confuses_lien_priority",
+          "label": "Confusing second lien with unsecured subordinated debt"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The 'why several tranches' half is the real question. A correct list with no rationale is Developing.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "lbo-004-irr-vs-moic",
+      "category_slug": "lbo-private-equity",
+      "subcategory": "Returns",
+      "difficulty": 3,
+      "prompt": "A sponsor can exit now at 2.0x in three years or hold for 2.8x in six years. Which is better, and what does that tell you about IRR versus money multiple?",
+      "ideal_answer": "The three-year exit at 2.0x is roughly a twenty-six percent IRR; the six-year exit at 2.8x is roughly an eighteen percent IRR. On IRR the earlier exit wins clearly; on money multiple the longer hold wins. Which is genuinely better depends on what the fund can do with the capital in between. If the sponsor can redeploy the proceeds into another investment at a similar return for the remaining three years, the early exit compounds to well above 2.8x and is better. If capital cannot be redeployed, the fund is late in its investment period, or the alternative is holding cash, then the absolute return of 2.8x may be worth more in dollars to the limited partners even at a lower IRR. That is the core tension: IRR is time-sensitive and can be flattered by early exits, dividend recapitalisations, and subscription-line facilities that delay capital calls, none of which create real value. Money multiple measures dollars returned but ignores time entirely, so a 2.0x over twenty years is a poor outcome that looks respectable. Limited partners look at both alongside DPI, distributions to paid-in capital, and increasingly at public market equivalents, which compare the fund's cash flows to what the same timing invested in an index would have returned. In practice I would also weigh the risk of the incremental three years, since the second period's return has to be earned and the exit environment in six years is unknowable, and a certain 2.0x today may beat a projected 2.8x that depends on multiple expansion.",
+      "expected_concepts": [
+        {
+          "key": "computes_irrs",
+          "label": "Correctly ranks the two on IRR, roughly 26% versus 18%"
+        },
+        {
+          "key": "redeployment",
+          "label": "The answer depends on whether capital can be redeployed"
+        },
+        {
+          "key": "irr_time_sensitive",
+          "label": "IRR is time-sensitive and can be gamed"
+        },
+        {
+          "key": "moic_ignores_time",
+          "label": "Money multiple ignores time entirely"
+        },
+        {
+          "key": "lp_perspective",
+          "label": "Limited partners look at both, plus DPI and public market equivalents"
+        },
+        {
+          "key": "risk_of_holding",
+          "label": "The incremental return carries incremental risk"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "picks_one_blindly",
+          "label": "Choosing on one metric without considering redeployment"
+        },
+        {
+          "key": "no_irr_estimate",
+          "label": "Not estimating the IRRs at all"
+        },
+        {
+          "key": "ignores_risk",
+          "label": "Treating the projected 2.8x as certain"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Approximate IRRs are fine; anything close to the mid-twenties and high teens shows the candidate can do it mentally. The redeployment insight is what makes the answer Strong.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "lbo-005-diligence-priorities",
+      "category_slug": "lbo-private-equity",
+      "subcategory": "Judgment",
+      "difficulty": 4,
+      "prompt": "You have two weeks and limited access to diligence a potential platform investment. What are your top priorities and why?",
+      "ideal_answer": "With limited time I would prioritise the things that could kill the deal and cannot be fixed later, rather than the things that are merely useful to know. First, quality of earnings: is reported EBITDA real, and how much of it is pro forma add-backs, one-off items, or accounting choices? Every turn of overstated EBITDA is a turn of overpayment and a covenant I will breach. Second, revenue durability: customer concentration, contract terms and renewal rights, churn and cohort retention, and whether the recent growth is price, volume, or a one-off catch-up. Third, the cash conversion and working capital profile, including the seasonal swing, because the debt structure has to survive the trough, not the average. Fourth, the competitive position and whether margins are defensible or currently benefiting from something temporary such as an input cost dislocation or a competitor's outage. Fifth, capital expenditure requirements including deferred maintenance, since a business starved of investment shows flattering cash flow that reverses. Sixth, management quality and whether they will stay and are willing to operate levered. Seventh, obvious binary risks: litigation, regulatory exposure, environmental liabilities, key licences, and change-of-control provisions in critical contracts. I would sequence it so anything binary is checked first, use third-party specialists for quality of earnings and any technical area, do customer calls even if only a handful because they are the highest-signal-per-hour work available, and be explicit at the investment committee about what I was unable to verify and how I have priced or structured around it, whether through a lower price, an escrow, or an indemnity.",
+      "expected_concepts": [
+        {
+          "key": "quality_of_earnings",
+          "label": "Quality of earnings and the reality of adjusted EBITDA"
+        },
+        {
+          "key": "revenue_durability",
+          "label": "Customer concentration, contracts, and retention"
+        },
+        {
+          "key": "cash_conversion",
+          "label": "Cash conversion and seasonal working capital swings"
+        },
+        {
+          "key": "competitive_position",
+          "label": "Whether margins are structurally defensible"
+        },
+        {
+          "key": "capex_requirements",
+          "label": "Capital expenditure needs and deferred maintenance"
+        },
+        {
+          "key": "binary_risks_first",
+          "label": "Sequencing binary deal-killing risks first"
+        },
+        {
+          "key": "acknowledge_gaps",
+          "label": "Being explicit about what could not be verified and pricing around it"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "unprioritised_list",
+          "label": "Listing every diligence workstream with no prioritisation"
+        },
+        {
+          "key": "no_sequencing",
+          "label": "No sense of what to do first given the time constraint"
+        },
+        {
+          "key": "ignores_unknowns",
+          "label": "Not addressing how to handle what remains unverified"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The constraint is the question. An answer that lists a full diligence plan without prioritising for two weeks has not engaged with it. Handling residual unknowns through price or structure is a strong signal.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "fsa-001-working-capital",
+      "category_slug": "financial-statement-analysis",
+      "subcategory": "Working capital",
+      "difficulty": 2,
+      "prompt": "What is the cash conversion cycle, and what does a negative one tell you?",
+      "ideal_answer": "The cash conversion cycle measures how long cash is tied up in operations. It equals days inventory outstanding plus days sales outstanding less days payables outstanding. Days inventory is how long stock sits before it is sold, days sales outstanding is how long customers take to pay after the sale, and days payables is how long the company takes to pay its own suppliers. A cycle of sixty days means the company funds sixty days of operations out of its own capital before the cash comes back, so growth consumes cash and faster growth consumes more. A negative cycle means the company collects from customers before it has to pay suppliers, so growth generates cash rather than consuming it and the business is effectively financed by its suppliers and customers. Retailers with fast inventory turns and immediate card payment, subscription businesses billing annually in advance, and marketplaces holding funds between transaction and payout typically have negative cycles. It is a genuine structural advantage: it lowers external financing needs, raises return on invested capital because less capital is invested, and makes the business more resilient. The caveats are that it can flatter results temporarily if it is achieved by stretching suppliers, which is not sustainable and can damage supplier relationships or supply security, and that a negative cycle works in reverse if the business shrinks, releasing a working capital outflow exactly when trading is already weak.",
+      "expected_concepts": [
+        {
+          "key": "formula",
+          "label": "DIO plus DSO less DPO"
+        },
+        {
+          "key": "meaning_of_positive",
+          "label": "A positive cycle means growth consumes cash"
+        },
+        {
+          "key": "negative_is_advantage",
+          "label": "A negative cycle means growth generates cash"
+        },
+        {
+          "key": "examples",
+          "label": "Names business models that typically run negative"
+        },
+        {
+          "key": "supplier_stretch_caveat",
+          "label": "It can be achieved unsustainably by stretching suppliers"
+        },
+        {
+          "key": "reverses_in_decline",
+          "label": "It reverses into an outflow if the business shrinks"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "wrong_formula",
+          "label": "Adding payables days instead of subtracting"
+        },
+        {
+          "key": "no_interpretation",
+          "label": "Giving the formula with no interpretation"
+        },
+        {
+          "key": "no_caveats",
+          "label": "Treating a negative cycle as unambiguously good"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The reversal-in-decline point is uncommon and a strong signal. The formula alone is Developing.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "fsa-002-margin-decline",
+      "category_slug": "financial-statement-analysis",
+      "subcategory": "Margin analysis",
+      "difficulty": 3,
+      "prompt": "A company's gross margin has fallen 400 basis points over two years while revenue grew 20%. How would you diagnose it?",
+      "ideal_answer": "Gross margin is price less cost of goods sold over price, so I would decompose the fall into price, mix, and cost. On price, is the company discounting to buy the volume that produced the revenue growth? That is the most worrying case, because it means growth is being purchased at the expense of profitability and often signals lost pricing power or a new competitor. On mix, has the revenue growth come disproportionately from a lower-margin product, channel, geography, or customer segment? A shift toward hardware from software, toward wholesale from direct, or toward a large low-margin customer will move blended margin without any single line deteriorating, and that is a much more benign explanation. On cost, have input prices, freight, labour, or currency moved against the company, and if so is that industry-wide or specific to this company's sourcing? I would also look at whether the company has been absorbing costs it previously passed through, whether there is a one-off such as an inventory write-down or a tariff sitting in cost of goods sold, and whether the accounting classification has changed, since companies sometimes move costs between cost of sales and operating expenses. To distinguish between these I would compare gross margin by segment where disclosed, look at volume versus price disclosure in the management commentary, compare against direct competitors to separate a company issue from a sector issue, and check whether operating margin fell by the same amount, since a stable operating margin alongside falling gross margin points toward reclassification or offsetting operating leverage rather than genuine deterioration. The conclusion matters commercially: mix-driven dilution alongside growing gross profit dollars can be perfectly healthy, while price-driven erosion is a structural problem.",
+      "expected_concepts": [
+        {
+          "key": "price_volume_mix",
+          "label": "Decomposes into price, mix, and cost"
+        },
+        {
+          "key": "discounting_risk",
+          "label": "Growth bought through discounting is the worrying case"
+        },
+        {
+          "key": "mix_shift",
+          "label": "Mix shift can dilute margin benignly"
+        },
+        {
+          "key": "input_costs",
+          "label": "Input cost, freight, labour, or currency movements"
+        },
+        {
+          "key": "peer_comparison",
+          "label": "Comparing to peers to separate company from sector effects"
+        },
+        {
+          "key": "reclassification_check",
+          "label": "Checking for a change in cost classification"
+        },
+        {
+          "key": "gross_profit_dollars",
+          "label": "Gross profit dollars can grow while the percentage falls"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "assumes_worst",
+          "label": "Assuming discounting without considering mix"
+        },
+        {
+          "key": "no_diagnostic_method",
+          "label": "Listing causes with no way to distinguish them"
+        },
+        {
+          "key": "percentage_only",
+          "label": "Focusing on the percentage and ignoring gross profit dollars"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The diagnostic method is the point. Reward the candidate who says how they would tell the causes apart, and who notes that mix dilution with growing gross profit can be fine.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "fsa-003-leverage-metrics",
+      "category_slug": "financial-statement-analysis",
+      "subcategory": "Leverage",
+      "difficulty": 2,
+      "prompt": "How would you assess whether a company is over-levered?",
+      "ideal_answer": "No single ratio answers it, because the sustainable level of leverage depends entirely on the stability of the cash flows servicing it. I would start with net debt to EBITDA for the headline level, then interest coverage measured as EBITDA or better EBIT over interest expense, since coverage speaks to whether the company can service the debt rather than just how much there is. I would prefer a cash-based measure where possible, such as free cash flow after capital expenditure over debt service including mandatory amortisation, because EBITDA overstates the cash actually available in a capital-intensive business. Then context. What is the maturity profile, and is there a wall of refinancing in the next two years, because a company can be comfortable on ratios and still fail if it cannot refinance. What are the covenant levels and how much headroom is there, and are the covenants maintenance or incurrence based. How stable are the cash flows: a regulated utility at five times leverage may be safer than a semiconductor company at two and a half. Is the debt fixed or floating, since a floating book in a rising rate environment can see coverage deteriorate without any operational change. Are there off-balance-sheet or debt-like items such as operating lease obligations, pension deficits, factored receivables, or securitisations. Finally I would benchmark against sector peers and against the company's own history, and stress test: what happens to coverage and covenant headroom in a downturn where EBITDA falls twenty or thirty percent, which is the question that actually matters.",
+      "expected_concepts": [
+        {
+          "key": "leverage_ratio",
+          "label": "Net debt to EBITDA as the headline measure"
+        },
+        {
+          "key": "coverage_ratio",
+          "label": "Interest and debt service coverage"
+        },
+        {
+          "key": "cash_based_measure",
+          "label": "Free cash flow after capex rather than EBITDA alone"
+        },
+        {
+          "key": "maturity_profile",
+          "label": "Maturity wall and refinancing risk"
+        },
+        {
+          "key": "covenant_headroom",
+          "label": "Covenant levels and headroom"
+        },
+        {
+          "key": "cash_flow_stability",
+          "label": "Sustainable leverage depends on cash flow stability"
+        },
+        {
+          "key": "stress_test",
+          "label": "Stress testing coverage in a downturn"
+        },
+        {
+          "key": "debt_like_items",
+          "label": "Leases, pensions, and other debt-like obligations"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "single_ratio",
+          "label": "Naming one ratio and a threshold as the answer"
+        },
+        {
+          "key": "ignores_stability",
+          "label": "Not linking sustainable leverage to cash flow stability"
+        },
+        {
+          "key": "forgets_maturities",
+          "label": "Ignoring refinancing and maturity risk"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The stress test is what a credit investor actually does. An answer with ratios but no downside scenario is Developing.",
+        "band_thresholds": {
+          "strong": 80,
+          "developing": 55
+        }
+      }
+    },
+    {
+      "source_key": "fsa-004-roic",
+      "category_slug": "financial-statement-analysis",
+      "subcategory": "Returns",
+      "difficulty": 3,
+      "prompt": "What is return on invested capital, why do investors care about it more than growth, and what are its limitations?",
+      "ideal_answer": "Return on invested capital is net operating profit after tax divided by invested capital, where invested capital is the operating capital the business actually employs, typically total debt plus equity less excess cash, or equivalently net working capital plus net fixed assets plus operating intangibles. It measures how much operating profit the business generates per dollar of capital it uses, before financing decisions. Investors care because it determines whether growth creates or destroys value. When ROIC exceeds the weighted average cost of capital, every dollar reinvested creates value and growth compounds; when ROIC is below WACC, growth destroys value and the company would be better returning capital to shareholders. A high-growth business earning below its cost of capital is destroying value faster the faster it grows, which is why growth alone is a poor investment thesis. A persistently high ROIC is also evidence of a competitive moat, since capitalism should compete excess returns away, so a business sustaining twenty-five percent returns for a decade is telling you something structural about its position. The limitations are real. It uses book capital, which understates the true capital base for a company that has expensed rather than capitalised its most valuable investments in research, brand, or software, so asset-light businesses can show artificially high ROIC. Acquisitions inflate invested capital through goodwill, so a serial acquirer's ROIC understates operating performance while a company that wrote off goodwill shows a flattered figure. It is a single-period measure so it says nothing about the returns on capital being invested today, which is what actually matters going forward, and incremental ROIC is often the more useful number. It is distorted by the age of the asset base, since depreciated assets shrink the denominator. And it is not meaningful for financial institutions.",
+      "expected_concepts": [
+        {
+          "key": "definition",
+          "label": "NOPAT over invested capital"
+        },
+        {
+          "key": "roic_vs_wacc",
+          "label": "Growth creates value only when ROIC exceeds WACC"
+        },
+        {
+          "key": "moat_evidence",
+          "label": "Persistently high ROIC is evidence of a competitive moat"
+        },
+        {
+          "key": "book_capital_distortion",
+          "label": "Book capital understates expensed intangible investment"
+        },
+        {
+          "key": "goodwill_effect",
+          "label": "Acquisition goodwill distorts comparability"
+        },
+        {
+          "key": "incremental_roic",
+          "label": "Incremental ROIC matters more than the historical average"
+        },
+        {
+          "key": "asset_age",
+          "label": "The age of the asset base distorts the denominator"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "confuses_with_roe",
+          "label": "Confusing ROIC with return on equity, which is post-leverage"
+        },
+        {
+          "key": "no_wacc_comparison",
+          "label": "Not comparing ROIC against the cost of capital"
+        },
+        {
+          "key": "no_limitations",
+          "label": "Treating the reported figure as directly comparable across companies"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Three-part question. The ROIC-versus-WACC point is essential; at least two credible limitations are needed for Strong.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "fsa-005-red-flags",
+      "category_slug": "financial-statement-analysis",
+      "subcategory": "Quality of earnings",
+      "difficulty": 4,
+      "prompt": "What red flags would make you doubt a company's reported numbers?",
+      "ideal_answer": "I would group them. On the reconciliation between earnings and cash: net income persistently exceeding cash flow from operations, rising days sales outstanding, inventory growing faster than revenue, and a widening gap between reported and adjusted figures where the add-backs are recurring rather than genuinely one-off. On revenue recognition: unusual or lengthening payment terms, revenue recognised well ahead of delivery, growing unbilled or contract-asset balances, large fourth-quarter concentration, and related-party revenue. On the balance sheet: goodwill and intangibles that dominate assets with no impairment despite a falling share price, capitalisation of costs that peers expense, frequent restructuring charges that never end, and reserve or allowance balances that move conveniently against earnings pressure. On disclosure and governance: frequent changes of auditor or chief financial officer, late filings, material weaknesses in internal control, restatements, an auditor whose size is disproportionate to the company, complex structures in low-transparency jurisdictions, aggressive management compensation tied to short-term earnings, and heavy insider selling. On the narrative: reported results that never miss guidance, unusually smooth earnings in a volatile industry, and an accounting profile that diverges from close competitors with no operational reason. None of these is proof on its own, and each has innocent explanations. What matters is the cluster and the trend, and specifically whether a plausible business explanation exists and holds up. My method would be to compare against the closest peers first, since accounting choices that differ from an entire industry are the highest-signal observation available, then read the footnotes and critical audit matters in full, then work the earnings-to-cash reconciliation for the last several years, and finally see whether management's explanations for each anomaly are consistent with each other over time.",
+      "expected_concepts": [
+        {
+          "key": "earnings_cash_gap",
+          "label": "Persistent gap between net income and operating cash flow"
+        },
+        {
+          "key": "receivables_inventory",
+          "label": "Receivables or inventory growing faster than revenue"
+        },
+        {
+          "key": "recurring_addbacks",
+          "label": "Add-backs and restructuring charges that recur every year"
+        },
+        {
+          "key": "capitalisation_vs_peers",
+          "label": "Capitalising costs that peers expense"
+        },
+        {
+          "key": "governance_signals",
+          "label": "Auditor or CFO turnover, restatements, control weaknesses"
+        },
+        {
+          "key": "too_smooth",
+          "label": "Earnings that are implausibly smooth or always meet guidance"
+        },
+        {
+          "key": "peer_benchmarking_method",
+          "label": "Comparing accounting choices against close peers as the primary method"
+        },
+        {
+          "key": "cluster_not_single",
+          "label": "No single flag is proof; the cluster and trend matter"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "list_without_method",
+          "label": "Listing flags with no method for weighing them"
+        },
+        {
+          "key": "treats_as_proof",
+          "label": "Treating any single flag as proof of manipulation"
+        },
+        {
+          "key": "ignores_governance",
+          "label": "Covering only financial ratios and ignoring governance signals"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Breadth across categories plus a method. The peer-comparison instinct and the refusal to treat one flag as proof are what mark a Strong answer.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "mkt-001-walk-me-through-deal",
+      "category_slug": "markets-deals-judgment",
+      "subcategory": "Deal awareness",
+      "difficulty": 2,
+      "prompt": "Tell me about a recent deal you have followed. Why did it happen, and do you think it was a good deal for the acquirer?",
+      "ideal_answer": "A strong answer names a specific, recent, real transaction and gives the essential facts accurately: the parties, roughly the size, the consideration structure, and roughly when it was announced. It then explains the strategic rationale from the acquirer's point of view in concrete terms, whether that is buying capability the acquirer could not build fast enough, consolidating a fragmented market for cost synergies, acquiring distribution or a customer base, defending against a competitive threat, or deploying capital where the seller was a forced or motivated seller. It should say something about the valuation, at least directionally, comparing the multiple paid or the premium to where the sector trades and to precedent deals, and say whether it looks full. Then it takes a clear position on whether the deal was good for the acquirer and defends it with specific reasoning, ideally naming what would have to be true for the deal to work, such as achieving a stated synergy number, and what the main risk is, whether that is integration, regulatory approval, financing conditions, or paying at the top of a cycle. It should acknowledge the strongest argument against its own view. What distinguishes a strong answer is not which deal is chosen but the presence of an actual opinion supported by specifics, and the ability to say what would change that opinion.",
+      "expected_concepts": [
+        {
+          "key": "specific_deal",
+          "label": "Names a specific, real, recent transaction with accurate facts"
+        },
+        {
+          "key": "strategic_rationale",
+          "label": "Explains why the acquirer did it, in concrete terms"
+        },
+        {
+          "key": "valuation_view",
+          "label": "Says something about the price paid relative to comparables or precedents"
+        },
+        {
+          "key": "clear_position",
+          "label": "Takes a clear position rather than hedging"
+        },
+        {
+          "key": "key_risk",
+          "label": "Identifies the main risk to the thesis"
+        },
+        {
+          "key": "counterargument",
+          "label": "Acknowledges the strongest argument against their view"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "no_opinion",
+          "label": "Describing a deal without taking a position"
+        },
+        {
+          "key": "vague_facts",
+          "label": "Vague or inaccurate deal facts"
+        },
+        {
+          "key": "generic_rationale",
+          "label": "Generic rationale such as 'synergies' with nothing specific"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Grade the reasoning, not the deal choice, and do not penalise a candidate for picking a deal outside the grader's knowledge. Reward a clear defended position and the acknowledgement of a counterargument. Penalise the absence of any opinion.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "mkt-002-rates-impact",
+      "category_slug": "markets-deals-judgment",
+      "subcategory": "Macro",
+      "difficulty": 3,
+      "prompt": "Interest rates rise 200 basis points. Walk me through the effect on M&A and LBO activity.",
+      "ideal_answer": "The mechanical effects run through valuation and financing. Higher risk-free rates raise the discount rate in every DCF, which lowers present values, and they lower the multiple the market will pay, particularly for long-duration assets where more of the value sits far in the future. Higher borrowing costs directly reduce what a leveraged buyer can pay: debt is more expensive to service, so lenders will advance fewer turns of EBITDA at a given coverage ratio, the sponsor's equity cheque has to grow for the same purchase price, and IRRs fall for any given entry multiple. Sponsors respond by bidding less, so LBO activity typically falls faster and further than strategic M&A. Strategic buyers are less affected because they often have cash and lower financing needs, and their relative advantage over sponsors grows, so the mix shifts toward strategics. Then the second-order effects. A bid-ask spread opens up, because sellers anchor on the valuations of the previous regime while buyers price the new cost of capital, and deal volume falls until sellers capitulate or are forced to transact. Existing portfolio companies with floating-rate debt see coverage deteriorate, which pushes some toward restructuring and creates distressed opportunities. Holding periods extend as sponsors wait for a better exit environment, which slows distributions to limited partners and eventually slows fundraising. Structures adapt, with more seller notes, earn-outs, preferred equity, and private credit filling the gap left by syndicated markets. The direction of causation matters too: rates usually rise because of inflation or growth, so the effect on any given company's earnings depends on whether it has pricing power, and a business that can pass through cost may be relatively more valuable in that environment even as its multiple compresses.",
+      "expected_concepts": [
+        {
+          "key": "higher_discount_rate",
+          "label": "Higher discount rates compress valuations"
+        },
+        {
+          "key": "reduced_debt_capacity",
+          "label": "Lenders advance fewer turns; equity cheques rise"
+        },
+        {
+          "key": "irr_compression",
+          "label": "Sponsor returns fall at any given entry multiple"
+        },
+        {
+          "key": "strategic_advantage",
+          "label": "Strategic buyers gain relative advantage over sponsors"
+        },
+        {
+          "key": "bid_ask_spread",
+          "label": "A bid-ask spread opens and volume falls until sellers adjust"
+        },
+        {
+          "key": "portfolio_stress",
+          "label": "Floating-rate portfolio companies come under pressure"
+        },
+        {
+          "key": "structural_adaptation",
+          "label": "Structures adapt with seller notes, earn-outs, and private credit"
+        },
+        {
+          "key": "why_rates_rose",
+          "label": "The reason rates rose affects earnings, not just multiples"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "valuation_only",
+          "label": "Covering valuation but not financing capacity"
+        },
+        {
+          "key": "no_second_order",
+          "label": "Missing the second-order effects on holding periods and fundraising"
+        },
+        {
+          "key": "ignores_cause",
+          "label": "Treating the rate move as isolated from what caused it"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "The chain from rates to debt capacity to equity cheque to IRR is the technical core. Second-order effects distinguish a Strong answer.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 52
+        }
+      }
+    },
+    {
+      "source_key": "mkt-003-advise-seller",
+      "category_slug": "markets-deals-judgment",
+      "subcategory": "Client judgment",
+      "difficulty": 3,
+      "prompt": "A founder owns 100% of a $200m revenue business and asks whether to sell to a strategic buyer, sell to a private equity firm, or IPO. How would you advise them?",
+      "ideal_answer": "The right answer depends on what the founder actually wants, so I would start there rather than with the options. Do they want full liquidity now or to keep participating in the upside? Do they want to keep running the business, and for how long? How much do they care about the company's independence, the brand, and the employees? What is their view on the business's next phase and whether they are the right person to lead it? Then map the options. A strategic sale usually delivers the highest headline price because a strategic can pay for synergies, gives full liquidity immediately, and is the cleanest exit, but the founder typically loses control, the business is often absorbed and the brand may disappear, employees face redundancy where roles overlap, and any earn-out is at the mercy of an acquirer they no longer control. A private equity sale usually prices below a strategic but allows a partial exit with meaningful rollover equity, so the founder takes real money off the table while retaining a second bite that can be worth more than the first, keeps an operating role, and gains a partner with capital and a playbook for the next phase; the costs are leverage, loss of full control, a board, and a mandated exit in roughly five years on the sponsor's timetable. An IPO offers the highest theoretical valuation for a genuinely high-growth business, keeps independence and gives the founder continued control if the structure allows, but delivers limited immediate liquidity because of lock-ups and the poor optics of a founder selling down, imposes substantial public company cost and disclosure, exposes the business to quarterly scrutiny, and at $200m of revenue may not clear the scale and predictability bar for a good listing at all. I would also stress that the process choice is not binary: running a dual-track process preserves optionality and creates competitive tension, and the market environment at the moment of decision may matter more than the theoretical ranking. My advice would be conditional on the founder's answers, and I would say so explicitly rather than picking one.",
+      "expected_concepts": [
+        {
+          "key": "founder_objectives_first",
+          "label": "Starts with what the founder wants, not with the options"
+        },
+        {
+          "key": "strategic_tradeoffs",
+          "label": "Strategic: highest price, full liquidity, loss of control and identity"
+        },
+        {
+          "key": "pe_tradeoffs",
+          "label": "PE: partial exit, rollover second bite, leverage and a five-year clock"
+        },
+        {
+          "key": "ipo_tradeoffs",
+          "label": "IPO: independence but limited liquidity, cost, scrutiny, and a scale bar"
+        },
+        {
+          "key": "scale_reality_check",
+          "label": "Notes that $200m revenue may be small for a good IPO"
+        },
+        {
+          "key": "dual_track",
+          "label": "A dual-track process preserves optionality and creates tension"
+        },
+        {
+          "key": "conditional_advice",
+          "label": "Gives conditional advice rather than a single answer"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "picks_without_asking",
+          "label": "Choosing an option without establishing the founder's objectives"
+        },
+        {
+          "key": "price_only",
+          "label": "Comparing the options on price alone"
+        },
+        {
+          "key": "ignores_ipo_bar",
+          "label": "Treating an IPO as freely available at this scale"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Tests client judgement. Starting with the founder's objectives is the single most important element; an answer that ranks the options on price alone is Needs Work regardless of technical accuracy.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "mkt-004-why-banking",
+      "category_slug": "markets-deals-judgment",
+      "subcategory": "Motivation",
+      "difficulty": 1,
+      "prompt": "Why investment banking, and why now?",
+      "ideal_answer": "A strong answer is specific, honest, and evidenced by what the candidate has actually done. It gives concrete reasons rooted in the work itself rather than generic claims: exposure to how companies are valued and financed at a formative moment, the analytical rigour of the work, the pace and breadth of learning across industries and transaction types, and the responsibility given early. It connects those reasons to specific evidence from the candidate's own experience, whether a valuation project, an internship, a student investment fund, a case competition, or independent work on a company they have researched, and shows what they learned from it rather than just naming it. It demonstrates a realistic understanding of what the job actually involves day to day, including the hours, the volume of process work, and the fact that a junior spends far more time on execution and materials than on strategic advice, and it explains why the candidate wants it anyway. The 'why now' half should be answered directly, tying to where they are in their studies, what they have already tested about their fit, and what specifically they want to be doing in the next two to three years. Weak answers rely on prestige, compensation, or generic phrases such as wanting to work with smart people or being passionate about finance, without any evidence. The bar is not eloquence; it is whether the reasons are specific enough that they could not be given by any other candidate.",
+      "expected_concepts": [
+        {
+          "key": "specific_reasons",
+          "label": "Specific reasons rooted in the nature of the work"
+        },
+        {
+          "key": "evidence_from_experience",
+          "label": "Backed by concrete personal experience with what was learned"
+        },
+        {
+          "key": "realistic_understanding",
+          "label": "Realistic view of the day-to-day job including its downsides"
+        },
+        {
+          "key": "answers_why_now",
+          "label": "Directly answers the timing half of the question"
+        },
+        {
+          "key": "forward_direction",
+          "label": "Says what they want to be doing in the next few years"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "generic_answer",
+          "label": "Generic answer that any candidate could give"
+        },
+        {
+          "key": "prestige_or_pay",
+          "label": "Leading with prestige or compensation"
+        },
+        {
+          "key": "unrealistic_view",
+          "label": "Describing the junior role as primarily strategic advisory"
+        },
+        {
+          "key": "skips_why_now",
+          "label": "Not answering the timing half at all"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Grade specificity and evidence, not polish or enthusiasm. Do not reward confident delivery of generic content. The test is whether the reasons could only have been given by this candidate.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    },
+    {
+      "source_key": "mkt-005-pitch-a-stock",
+      "category_slug": "markets-deals-judgment",
+      "subcategory": "Investment judgment",
+      "difficulty": 4,
+      "prompt": "Pitch me a company you would buy today. What is the market missing, and what would prove you wrong?",
+      "ideal_answer": "A strong pitch has a clear structure. It names the company and states the recommendation and rough time horizon up front, then gives a short business description covering how the company actually makes money, its main segments, and its competitive position, so the listener has the context to judge what follows. It then states the variant perception explicitly: what the market believes, what the candidate believes instead, and why the market is wrong, which might be a misunderstood segment, a mispriced cyclical trough, an underappreciated structural change, an accounting artefact obscuring the true earnings power, or a temporary dislocation from a forced seller or index event. A thesis with no variant perception is not a thesis; it is a description of a good company, and good companies are usually priced as such. It supports the view with specific evidence and at least a rough valuation, whether a multiple against peers and history, an implied return, or a reverse DCF showing what the current price assumes and why that is too pessimistic. It names the catalyst or the mechanism by which the market comes to agree, and it is honest if there is no catalyst beyond time. Then the risks: the two or three specific things that would break the thesis, sized and stated as falsifiable conditions rather than a token disclaimer, and crucially what evidence would make the candidate change their mind. That last element is the strongest signal in the whole answer, because it separates someone holding a view from someone who has genuinely tested it. The quality of the pitch does not depend on the company chosen or on whether the grader agrees with the conclusion.",
+      "expected_concepts": [
+        {
+          "key": "clear_recommendation",
+          "label": "States the company, the recommendation, and a horizon up front"
+        },
+        {
+          "key": "business_understanding",
+          "label": "Demonstrates real understanding of how the business makes money"
+        },
+        {
+          "key": "variant_perception",
+          "label": "Articulates what the market believes and why it is wrong"
+        },
+        {
+          "key": "valuation_support",
+          "label": "Supports the view with a valuation or implied return"
+        },
+        {
+          "key": "catalyst",
+          "label": "Names a catalyst or is honest that there is none"
+        },
+        {
+          "key": "specific_risks",
+          "label": "Names specific, falsifiable risks rather than token caveats"
+        },
+        {
+          "key": "disconfirming_evidence",
+          "label": "States what evidence would change their mind"
+        }
+      ],
+      "common_mistakes": [
+        {
+          "key": "no_variant_perception",
+          "label": "Describing a good company without saying what the market is missing"
+        },
+        {
+          "key": "token_risks",
+          "label": "Listing generic risks such as 'competition' or 'recession'"
+        },
+        {
+          "key": "no_valuation",
+          "label": "Making the case with no valuation anchor"
+        },
+        {
+          "key": "unfalsifiable",
+          "label": "A thesis with no condition that would disprove it"
+        }
+      ],
+      "rubric": {
+        "scoring_notes": "Grade the structure and rigour, not the stock, and never penalise disagreement with the conclusion. The variant perception and the disconfirming-evidence element carry the most weight; a well-presented description of a quality company with neither is Developing at best.",
+        "band_thresholds": {
+          "strong": 78,
+          "developing": 50
+        }
+      }
+    }
+  ]
+}

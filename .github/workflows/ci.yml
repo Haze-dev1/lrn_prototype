@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: lrn
+          POSTGRES_PASSWORD: lrn
+          POSTGRES_DB: lrn_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U lrn -d lrn_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:8-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+
+    env:
+      ENVIRONMENT: test
+      DATABASE_URL: postgresql+psycopg://lrn:lrn@localhost:5432/lrn_test
+      REDIS_URL: redis://localhost:6379/1
+      # Test-only value. Real secrets are never present in CI for this project.
+      JWT_SECRET: ci-only-secret-value-at-least-32-characters
+      GRADING_PROVIDER: fake
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.12.4"
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync --locked --group dev
+      - name: Lint
+        run: uv run ruff check .
+      - name: Format check
+        run: uv run ruff format --check .
+      - name: Typecheck
+        run: uv run mypy core commons
+      - name: Apply migrations
+        run: uv run alembic upgrade head
+      - name: Test
+        run: uv run pytest -q
+
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
+
+  compose:
+    name: Docker topology
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate compose configuration
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
+          docker compose -f docker-compose.yml config --quiet
+      - name: Production config must not mount source or publish datastore ports
+        run: |
+          docker compose -f docker-compose.yml config --format json > prod.json
+          python3 - <<'CHECK'
+          import json, sys
+          services = json.load(open("prod.json"))["services"]
+          failures = []
+          for name in ("postgres", "redis"):
+              if services[name].get("ports"):
+                  failures.append(f"{name} publishes a host port in production")
+          for name in ("web", "api", "scheduler"):
+              for volume in services[name].get("volumes", []):
+                  source = volume.get("source", "")
+                  if source.startswith("/"):
+                      failures.append(f"{name} bind-mounts {source} in production")
+          if failures:
+              print("\n".join(failures)); sys.exit(1)
+          print("production compose config is clean")
+          CHECK

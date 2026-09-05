@@ -1,0 +1,152 @@
+@import 'tailwindcss';
+
+/*
+ * LRN design tokens.
+ *
+ * Dark-first by definition, not by preference: the product is used in long focused sessions and
+ * the assessment surfaces must not glare. Colour is treated as a scarce resource — chrome is
+ * near-monochrome, and saturated colour is reserved almost entirely for mastery evidence, so a
+ * red category on a dashboard is the only thing competing for attention.
+ */
+@theme {
+  /* Canvas and layered surfaces. Deep blue-charcoal, never pure black: absolute black kills the
+     sense of depth that separates a raised card from the page beneath it. */
+  --color-canvas: oklch(0.16 0.014 255);
+  --color-surface-1: oklch(0.2 0.016 255);
+  --color-surface-2: oklch(0.24 0.018 255);
+  --color-surface-3: oklch(0.29 0.02 255);
+
+  --color-border-subtle: oklch(0.31 0.018 255);
+  --color-border-strong: oklch(0.4 0.022 255);
+
+  --color-text-primary: oklch(0.95 0.006 255);
+  --color-text-secondary: oklch(0.72 0.017 255);
+  --color-text-muted: oklch(0.57 0.021 255);
+  --color-text-inverse: oklch(0.16 0.014 255);
+
+  /* Interactive accent. Used for focus rings, active navigation and links — never as decoration. */
+  --color-accent: oklch(0.79 0.121 213);
+  --color-accent-strong: oklch(0.71 0.135 213);
+  --color-accent-muted: oklch(0.42 0.062 213);
+
+  /* Mastery bands. These carry meaning and must stay visually distinct from the accent. */
+  --color-band-strong: oklch(0.77 0.155 158);
+  --color-band-developing: oklch(0.8 0.137 79);
+  --color-band-needs-work: oklch(0.68 0.183 21);
+
+  --color-danger: oklch(0.68 0.183 21);
+  --color-success: oklch(0.77 0.155 158);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'SF Mono', monospace;
+
+  --radius-card: 0.625rem;
+
+  /* Motion is used to communicate state change, so durations are short and easing is decisive. */
+  --ease-out-quick: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    /* Long assessment prompts read better without the browser's default text inflation. */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Numerals must not reflow as scores animate or tables update. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Small uppercase labels carry the assessment/terminal register the product is aiming for. */
+  .label-micro {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /*
+   * The grade reveal on the landing page.
+   *
+   * A CSS animation rather than a client component, so the marketing page ships zero JavaScript:
+   * a keyframe with `both` fill runs on load without anything to hydrate.
+   *
+   * It exists because the product's defining moment is a grade appearing after an answer is
+   * submitted, and showing that is more honest than describing it. It is one short reveal, not a
+   * simulated "thinking" animation — the product does not have one of those and the page must not
+   * imply otherwise. The reduced-motion block below collapses it to nothing.
+   */
+  @keyframes lrn-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .reveal {
+    animation: lrn-reveal 420ms var(--ease-out-quick) both;
+  }
+
+  /*
+   * A concept the grader looked for and did not find, marked where it should have appeared.
+   *
+   * A dashed outline rather than a strikethrough: nothing was crossed out, something is missing,
+   * and the two read differently. This is the page's one piece of visual invention and it earns
+   * its place by making "we grade what you did not say" legible without a caption.
+   */
+  .concept-missing {
+    border: 1px dashed var(--color-band-needs-work);
+    color: var(--color-band-needs-work);
+    border-radius: 4px;
+    padding: 0.05em 0.4em;
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    white-space: nowrap;
+  }
+
+  /* A concept the answer actually established, underlined in the student's own words. */
+  .concept-hit {
+    color: var(--color-text-primary);
+    background: transparent;
+    border-bottom: 2px solid var(--color-band-strong);
+    padding-bottom: 1px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-muted);
+    color: var(--color-text-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
