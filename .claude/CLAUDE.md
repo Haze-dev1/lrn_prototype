@@ -215,7 +215,7 @@ GET    /v1/admin/questions/{id}/versions/{vid}/validation rubric completeness, w
 ```
 route → controller → attempt persisted → background task
                                              ↓
-                       GradingService → GradingProvider → OpenRouterProvider
+                       GradingService → GradingProvider → GroqProvider
                                              ↓
                         validate → persist result + grade_event
 ```
@@ -228,7 +228,8 @@ consumes `GradeResult`.
 | `types.py` | `GradeContext`, `GradeResult`, failure kinds. The domain boundary. |
 | `prompts.py` | Prompt text, output contract, injection defences, `PROMPT_VERSION` |
 | `provider.py` | The `GradingProvider` interface and the configured-provider factory |
-| `openrouter_provider.py` | Every OpenRouter-specific detail, and nothing else |
+| `groq_provider.py` | Every Groq-specific detail, and nothing else |
+| `openrouter_provider.py` | The same for OpenRouter, kept as an alternative |
 | `fake_provider.py` | Deterministic local grading; the default, so a fresh clone works |
 | `grading_service.py` | Orchestration, validation, retries, audit |
 | `benchmark.py` | Runs labelled answers through the real path and scores the grader |
@@ -641,7 +642,7 @@ These are product-critical. Breaking one is a defect, not a style issue.
     the way it was, and the interface only makes claims that selection actually acted on.
 13. **Grading never runs before the answer is durable.** Persist, then grade. Every failure
     after that point costs a delay, never an answer.
-14. **Provider details stay behind the abstraction.** OpenRouter specifics live only in the
+14. **Provider details stay behind the abstraction.** Groq and OpenRouter specifics live only in the
    provider adapter; the rest of the application consumes `GradeResult`. Model names come from
    configuration, never from business logic.
 
@@ -708,7 +709,8 @@ These are product-critical. Breaking one is a defect, not a style issue.
 - **Literal routes must be declared before their `{param}` siblings.**
   `/v1/admin/questions/coverage` sits above `/v1/admin/questions/{question_id}`, or `coverage`
   parses as a question ID and 422s.
-- **Not every OpenRouter model supports `response_format`/`json_schema`.** One that does not
+- **Not every model supports `response_format`/`json_schema`.** Most of Groq's catalogue does
+  not; only the GPT-OSS and Qwen models do. One that does not
   rejects the whole request with a 400; the provider detects this, remembers it per model for the
   process, and retries without the constraint. The output contract is therefore stated in the
   prompt as well as in the schema — dropping the schema must not drop the field names.

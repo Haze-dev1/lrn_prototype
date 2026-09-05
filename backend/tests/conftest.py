@@ -19,7 +19,12 @@ os.environ.setdefault("GRADING_PROVIDER", "fake")
 # these endpoints from "not configured" to "configured" and fail tests that assert the
 # unconfigured behaviour. A suite whose result depends on the machine it runs on is not a suite.
 # A test that needs one of these sets it explicitly through settings.
-for _integration_credential in ("GOOGLE_CLIENT_ID", "OPENROUTER_API_KEY", "STRIPE_SECRET_KEY"):
+for _integration_credential in (
+    "GOOGLE_CLIENT_ID",
+    "GROQ_API_KEY",
+    "OPENROUTER_API_KEY",
+    "STRIPE_SECRET_KEY",
+):
     os.environ.pop(_integration_credential, None)
 
 import socket  # noqa: E402

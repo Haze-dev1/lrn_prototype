@@ -5,8 +5,8 @@ send a prompt somewhere and return what came back, along with the accounting the
 needs; it does not know what a rubric is, does not validate content, and does not decide whether
 a failure is worth retrying beyond classifying it.
 
-Keeping the boundary this narrow is what makes the provider replaceable. Swapping OpenRouter for
-a direct vendor API, a self-hosted model, or a different router should touch exactly one file.
+Keeping the boundary this narrow is what makes the provider replaceable. Swapping Groq for a
+router, a different vendor API, or a self-hosted model should touch exactly one file.
 """
 
 from abc import ABC, abstractmethod
@@ -63,15 +63,19 @@ def get_grading_provider() -> GradingProvider:
     Build the grading provider named by configuration.
 
     Imports are local to the branch taken so a deployment configured for one provider does not
-    import the other's client, and so the fake provider carries no cost of existing in production.
+    import another's client, and so the fake provider carries no cost of existing in production.
 
     Returns:
         GradingProvider: The configured provider.
 
     Raises:
-        GradingError: If the configured provider is not usable, for example OpenRouter with no
-            API key.
+        GradingError: If the configured provider is not usable, for example Groq with no API key.
     """
+    if settings.GRADING_PROVIDER == "groq":
+        from core.services.ai.groq_provider import GroqProvider
+
+        return GroqProvider()
+
     if settings.GRADING_PROVIDER == "openrouter":
         from core.services.ai.openrouter_provider import OpenRouterProvider
 

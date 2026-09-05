@@ -49,7 +49,7 @@ architecture and known risks.
 | Cache / coordination | Redis 8 (Docker) |
 | Scheduled work | APScheduler in a dedicated container, Redis-backed locking |
 | Reverse proxy | Caddy — same-origin routing, TLS in production |
-| AI grading | OpenRouter behind an internal provider abstraction |
+| AI grading | Groq behind an internal provider abstraction |
 
 ---
 
@@ -133,7 +133,7 @@ never be committed. The ones you must set before the stack is usable:
 | `DATABASE_URL` | Application connection string; the host is the Compose service name, not `localhost` |
 | `REDIS_URL` | Redis connection string |
 | `JWT_SECRET` | Session token signing key, minimum 32 characters |
-| `GRADING_PROVIDER` | `fake` for local development and tests, `openrouter` once a key is set |
+| `GRADING_PROVIDER` | `fake` for local development and tests, `groq` once a key is set |
 | `SITE_ADDRESS` | `:80` for plain HTTP locally, or a hostname to enable automatic TLS |
 | `GOOGLE_CLIENT_ID` | Optional. Enables Google sign-in; no client secret is needed or stored |
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Optional. Without them checkout answers 503 and the webhook refuses every request |
@@ -144,7 +144,7 @@ never be committed. The ones you must set before the stack is usable:
 | `PROXY_HTTP_PORT` / `PROXY_HTTPS_PORT` | Host ports the proxy publishes (`8080`/`8443` locally) |
 | `HOST_UID` / `HOST_GID` | Your `id -u` / `id -g`, so files written into bind mounts are yours |
 
-`OPENROUTER_API_KEY`, `GOOGLE_CLIENT_ID`, `RESEND_API_KEY`, `POSTHOG_API_KEY` and `SENTRY_DSN`
+`GROQ_API_KEY`, `GOOGLE_CLIENT_ID`, `RESEND_API_KEY`, `POSTHOG_API_KEY` and `SENTRY_DSN`
 are optional; the stack runs without them, with the corresponding feature reporting itself as
 unconfigured rather than failing.
 
@@ -220,7 +220,7 @@ browser.
 
 ```bash
 GRADING_PROVIDER=fake         # deterministic, no network call, no key needed (default)
-GRADING_PROVIDER=openrouter   # real grading; requires OPENROUTER_API_KEY
+GRADING_PROVIDER=groq         # real grading; requires GROQ_API_KEY
 ```
 
 The default is `fake`, so a fresh clone has working grading with no account anywhere. It grades by
@@ -267,7 +267,7 @@ make benchmark     # or: uv run python -m scripts.run_grading_benchmark
 ```
 
 This runs a set of human-labelled answers through the real grading path and reports how often the
-grader agreed with the human, broken down by the kind of answer. Against `openrouter` it makes one
+grader agreed with the human, broken down by the kind of answer. Against `groq` it makes one
 real model call per case.
 
 ---

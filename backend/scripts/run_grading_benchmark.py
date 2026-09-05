@@ -4,7 +4,7 @@ Run this before changing the grading model, the prompt, or a rubric, and compare
 the run before. A change that lowers agreement is a regression however good it looked in
 isolation.
 
-Uses whatever ``GRADING_PROVIDER`` is set to. Against ``openrouter`` this makes one real, paid
+Uses whatever ``GRADING_PROVIDER`` is set to. Against ``groq`` this makes one real, billable
 model call per case; against ``fake`` it makes none, which validates the harness but says nothing
 about grading quality.
 

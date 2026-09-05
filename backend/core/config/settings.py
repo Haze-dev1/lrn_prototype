@@ -70,10 +70,15 @@ class Settings(BaseSettings):
     REGISTER_RATE_LIMIT_WINDOW_SECONDS: int = 3600
 
     # --- AI grading ----------------------------------------------------------------
-    GRADING_PROVIDER: Literal["openrouter", "fake"] = "fake"
+    GRADING_PROVIDER: Literal["groq", "openrouter", "fake"] = "fake"
+    GROQ_API_KEY: str | None = None
+    GROQ_BASE_URL: str = "https://api.groq.com/openai/v1"
     OPENROUTER_API_KEY: str | None = None
     OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
-    GRADING_MODEL: str = "openai/gpt-4o-mini"
+    # Model identifiers are provider-scoped, so this has to change with GRADING_PROVIDER. The
+    # default names a Groq model because Groq is what a configured deployment uses; a router
+    # deployment overrides both together.
+    GRADING_MODEL: str = "openai/gpt-oss-120b"
     GRADING_TIMEOUT_SECONDS: float = 45.0
     GRADING_MAX_RETRIES: int = 2
     # How long an attempt must sit unresolved before the retry sweep claims it. Must exceed the
