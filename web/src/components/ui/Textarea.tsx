@@ -11,13 +11,13 @@ import type { ComponentPropsWithRef } from 'react';
 // ComponentPropsWithRef rather than TextareaHTMLAttributes: React 19 passes `ref` to function
 // components as an ordinary prop, and the assessment composer needs one to take focus when the
 // student moves to a new question.
-export interface TextareaProps extends Omit<ComponentPropsWithRef<'textarea'>, 'className'> {
+export interface TextareaProps extends ComponentPropsWithRef<'textarea'> {
   invalid?: boolean;
   /** Render in monospace, for structured content where alignment carries meaning. */
   mono?: boolean;
 }
 
-export function Textarea({ invalid = false, mono = false, rows = 5, ...props }: TextareaProps) {
+export function Textarea({ invalid = false, mono = false, rows = 5, className, ...props }: TextareaProps) {
   return (
     <textarea
       {...props}
@@ -29,6 +29,7 @@ export function Textarea({ invalid = false, mono = false, rows = 5, ...props }: 
         'disabled:cursor-not-allowed disabled:opacity-60',
         mono ? 'font-mono text-xs leading-relaxed' : 'leading-relaxed',
         invalid ? 'border-band-needs-work' : 'border-border-subtle hover:border-border-strong',
+        className || '',
       ].join(' ')}
     />
   );

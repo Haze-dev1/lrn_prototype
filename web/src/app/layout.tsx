@@ -1,14 +1,17 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 
 import '@/styles/globals.css';
+import { ThemeProvider } from '@/components/layout/ThemeProvider';
+import { THEME_INIT_SCRIPT } from '@/components/layout/theme-script';
 
-// Inter carries dense prose and long question prompts; JetBrains Mono carries scores, category
-// labels and progress counters, where tabular numerals and a technical register matter.
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
-const jetbrainsMono = JetBrains_Mono({
+const primaryFont = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-primary', display: 'swap' });
+// Bound to `--font-mono-raw`, not `--font-mono`: the theme token in globals.css reads
+// `var(--font-mono-raw), ui-monospace, …`, and naming both the same made that declaration
+// self-referential and silently dropped the fallback chain.
+const monoFont = JetBrains_Mono({
   subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
+  variable: '--font-mono-raw',
   display: 'swap',
 });
 
@@ -23,15 +26,25 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  // The product is dark by default; declaring it prevents a white flash before CSS loads.
-  colorScheme: 'dark',
-  themeColor: '#0a0e15',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fcfcfc' },
+    { media: '(prefers-color-scheme: dark)', color: '#101216' },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="min-h-dvh antialiased">{children}</body>
+    <html lang="en" className={`${primaryFont.variable} ${monoFont.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Blocking, and before anything paints: an effect-applied theme flashes the classless
+            dark default on every full load for anyone whose theme is light. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
+      <body className="min-h-dvh antialiased text-text-primary bg-canvas">
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

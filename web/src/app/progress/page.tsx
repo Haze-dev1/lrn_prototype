@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { Route } from 'next';
 
+import { TrendingUp } from 'lucide-react';
+
 import { AppShell } from '@/components/layout/AppShell';
 import { Button } from '@/components/ui/Button';
 import { CategoryProgressList } from '@/features/progress/components/CategoryProgressList';
@@ -42,10 +44,24 @@ export default async function ProgressPage() {
         </div>
 
         {hasEvidence ? (
-          <>
-            <MasteryTrend trend={progress.trend} movement={progress.movement} />
-            <CategoryProgressList categories={progress.categories} />
-          </>
+          <div className="space-y-16">
+            <section aria-labelledby="trend-heading" className="pt-8 border-t border-border-subtle">
+              <div className="flex items-center gap-2 mb-6">
+                <TrendingUp className="w-4 h-4 text-text-muted" aria-hidden="true" />
+                <h2 id="trend-heading" className="label-micro text-accent">
+                  MASTERY TREND
+                </h2>
+              </div>
+              <div className="h-40">
+                <MasteryTrend trend={progress.trend} movement={progress.movement} />
+              </div>
+            </section>
+            
+            <section>
+              <h2 className="label-micro text-accent mb-6">CATEGORY BREAKDOWN</h2>
+              <CategoryProgressList categories={progress.categories} />
+            </section>
+          </div>
         ) : (
           <Link href={'/diagnostic' as Route}>
             <Button size="lg">Take the diagnostic</Button>

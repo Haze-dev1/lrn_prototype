@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import { AppShell } from '@/components/layout/AppShell';
 import { PlanCard } from '@/features/billing/components/PlanCard';
+import { PublicShell } from '@/features/marketing/components/PublicShell';
 import { fetchPlans } from '@/lib/api/billing';
+import { getCurrentUser } from '@/lib/auth/session';
 
 // Rendered per request: the page shows the caller's own plan when they are signed in, and the
 // build has no session to render that against.
@@ -27,12 +30,18 @@ interface PageProps {
  * The paywall argument is not made here — it is made on the results page, once a student has seen
  * which categories are weak. By the time anyone reads this page they already know what they would
  * be buying, so the page's job is to be clear rather than persuasive.
+ *
+ * Chrome depends on who is asking: the public navbar and footer for a visitor, the app shell for
+ * a signed-in student. Rendering neither left the page a dead end with no way back.
  */
 export default async function PricingPage({ searchParams }: PageProps) {
   const { checkout } = await searchParams;
-  const { plans, entitlement, billing_enabled } = await fetchPlans();
+  const [{ plans, entitlement, billing_enabled }, user] = await Promise.all([
+    fetchPlans(),
+    getCurrentUser(),
+  ]);
 
-  return (
+  const content = (
     <main className="mx-auto w-full max-w-5xl px-6 py-16">
       <div className="max-w-2xl">
         <p className="label-micro">Pricing</p>
@@ -94,5 +103,13 @@ export default async function PricingPage({ searchParams }: PageProps) {
         </p>
       </div>
     </main>
+  );
+
+  return user ? (
+    <AppShell email={user.email} isAdmin={user.is_admin} current="/pricing">
+      {content}
+    </AppShell>
+  ) : (
+    <PublicShell>{content}</PublicShell>
   );
 }

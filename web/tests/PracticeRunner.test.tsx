@@ -195,7 +195,10 @@ describe('PracticeRunner', () => {
     await waitFor(() => expect(screen.getByText(/could not be graded/)).toBeInTheDocument(), {
       timeout: 4000,
     });
-    expect(screen.queryByText(/^\d+$/)).not.toBeInTheDocument();
+    // No grade at all rather than a zero — asserted against the grade panel's own landmark,
+    // because the runner legitimately renders other numbers (the question's position).
+    expect(screen.queryByRole('region', { name: 'Your grade' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Developing')).not.toBeInTheDocument();
   });
 });
 
@@ -206,8 +209,8 @@ describe('GradePanel', () => {
     render(<GradePanel attempt={graded()} labels={labels} />);
     const text = document.body.textContent ?? '';
 
-    expect(text.indexOf('72')).toBeLessThan(text.indexOf('Concepts you showed'));
-    expect(text.indexOf('Concepts you showed')).toBeLessThan(text.indexOf('Coaching'));
+    expect(text.indexOf('72')).toBeLessThan(text.indexOf('WHAT YOU GOT RIGHT'));
+    expect(text.indexOf('WHAT YOU GOT RIGHT')).toBeLessThan(text.indexOf('WHAT TO IMPROVE'));
   });
 
   it('says so plainly when nothing was covered', () => {
@@ -227,7 +230,9 @@ describe('GradePanel', () => {
     // not to be the first thing read.
     render(<GradePanel attempt={graded()} labels={labels} />);
 
-    expect(screen.getByText('Reference answer').closest('details')).not.toHaveAttribute('open');
+    expect(
+      screen.getByText('Read reference answer').closest('details'),
+    ).not.toHaveAttribute('open');
   });
 
   it('shows mistake flags when the grade carries them', () => {

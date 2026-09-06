@@ -6,6 +6,7 @@ import { notFound, redirect } from 'next/navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { Button } from '@/components/ui/Button';
 import { GradePanel } from '@/features/practice/components/GradePanel';
+import { InlineGlossaryText } from '@/features/glossary/components/InlineGlossaryText';
 import { ApiError } from '@/lib/api/client';
 import { fetchAttempt, isGraded } from '@/lib/api/sessions';
 import { requireOnboardedUser } from '@/lib/auth/session';
@@ -52,7 +53,7 @@ export default async function ReviewDetailPage({ params }: PageProps) {
           </Link>
           <p className="label-micro mt-4">{attempt.category_name}</p>
           <h1 className="mt-2 text-2xl leading-snug font-medium text-text-primary">
-            {attempt.question_prompt}
+            <InlineGlossaryText text={attempt.question_prompt} />
           </h1>
         </div>
 

@@ -7,6 +7,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { MIN_USEFUL_LENGTH, QuestionComposer } from '@/features/diagnostic/components/QuestionComposer';
+import { InlineGlossaryText } from '@/features/glossary/components/InlineGlossaryText';
 import { DifficultyMeter } from '@/features/diagnostic/components/DifficultyMeter';
 import { ProgressRail } from '@/features/diagnostic/components/ProgressRail';
 import { ApiError } from '@/lib/api/client';
@@ -136,7 +137,7 @@ export function DiagnosticRunner({ session }: DiagnosticRunnerProps) {
         </div>
 
         <h1 className="mt-4 text-2xl leading-snug font-medium text-text-primary md:text-[1.75rem]">
-          {question.prompt}
+          <InlineGlossaryText text={question.prompt} />
         </h1>
         {question.subcategory ? (
           <p className="mt-2 text-sm text-text-muted">{question.subcategory}</p>

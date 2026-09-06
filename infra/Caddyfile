@@ -43,6 +43,18 @@
 		# gets no reference to this window. It only permits popups LRN itself opens to reference
 		# their opener.
 		Cross-Origin-Opener-Policy same-origin-allow-popups
+
+		# Nothing here needs a camera, a microphone or a location, so nothing here may ask.
+		Permissions-Policy "accelerometer=(), camera=(), display-capture=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+
+		# `script-src` carries 'unsafe-inline' because Next streams its RSC payload through
+		# inline scripts and the pre-paint theme script is inline by necessity; tightening it
+		# means minting a per-request nonce in the proxy and threading it through the root
+		# layout. The directives that do not depend on that are enforced now and are the ones
+		# that matter most against an injected script: it cannot rewrite the document base,
+		# retarget a form, load a plugin, exfiltrate to an arbitrary origin, or frame the app.
+		# 'unsafe-eval' is here for the development bundler; production builds do not need it.
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.googleusercontent.com https://*.gstatic.com; font-src 'self' data:; connect-src 'self' https://accounts.google.com; frame-src 'self' https://accounts.google.com; worker-src 'self' blob:; media-src 'self'; manifest-src 'self'"
 		-Server
 	}
 

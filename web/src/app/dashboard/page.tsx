@@ -7,34 +7,20 @@ import { Button } from '@/components/ui/Button';
 import { AllowanceMeter } from '@/features/billing/components/AllowanceMeter';
 import { MasteryTrend } from '@/features/progress/components/MasteryTrend';
 import { ReviewList } from '@/features/review/components/ReviewList';
-import { bandForScore } from '@/features/results/components/ScoreBar';
 import { fetchEntitlement } from '@/lib/api/billing';
 import { fetchProgress, fetchReview } from '@/lib/api/review';
 import { fetchCurrentDiagnostic } from '@/lib/api/sessions';
 import { requireOnboardedUser } from '@/lib/auth/session';
+import { Activity, Target, TrendingUp, AlertCircle, ArrowRight } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
-
-export const metadata: Metadata = { title: 'Home' };
+export const metadata: Metadata = { title: 'Dashboard' };
 
 const RECENT_COUNT = 5;
 
-/**
- * Signed-in home.
- *
- * The hierarchy is fixed and deliberate: current state, then the weakest area, then the
- * recommended action, then evidence, then history. That is the order a student needs those things
- * in, and it puts the single most useful action above the fold rather than behind a summary.
- *
- * There is no grid of KPI cards and no chart per category. Before a diagnostic has been taken the
- * page has exactly one thing to say and says only that, because a dashboard that implies data it
- * does not have is worse than one admitting the product has nothing to show yet.
- */
 export default async function DashboardPage() {
   const user = await requireOnboardedUser('/dashboard');
 
-  // Fetched together; a failure in either must not take the page down, so the call to action
-  // still renders without the evidence beneath it.
   const [progress, recent, diagnostic, entitlement] = await Promise.all([
     fetchProgress().catch(() => null),
     fetchReview({ limit: RECENT_COUNT }).catch(() => null),
@@ -54,23 +40,33 @@ export default async function DashboardPage() {
   if (!weakest) {
     return (
       <AppShell email={user.email} isAdmin={user.is_admin} current="/dashboard">
-        <main className="mx-auto w-full max-w-3xl space-y-8 px-6 py-12">
+        <main className="mx-auto w-full max-w-4xl px-6 py-12 flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div>
-            <p className="label-micro">Home</p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
-              {inProgress ? 'Finish your diagnostic' : 'Start here'}
+            <p className="label-micro text-accent">Overview</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-text-primary">
+              {inProgress ? 'Continue Evaluation' : 'Welcome to LRN'}
             </h1>
           </div>
-          <section className="rounded-[--radius-card] border border-border-strong bg-surface-1 p-6">
-            <p className="max-w-xl text-sm leading-relaxed text-text-secondary">
-              {inProgress
-                ? `You have answered ${inProgress.answered_count} of ${inProgress.question_count} questions. Your answers are saved — pick up where you left off.`
-                : 'Nothing here is measured yet. The diagnostic takes one sitting and establishes a baseline across all eight technical categories, so practice afterwards can target what is actually weak.'}
-            </p>
-            <div className="mt-5">
+          
+          <section className="relative overflow-hidden rounded-[--radius-card] border border-border-strong bg-surface-1 p-8 shadow-sm">
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <Target className="w-32 h-32 text-accent" />
+            </div>
+            
+            <div className="relative z-10 max-w-xl">
+              <h2 className="text-xl font-medium text-text-primary mb-3">
+                Establish your baseline
+              </h2>
+              <p className="text-base leading-relaxed text-text-secondary mb-8">
+                {inProgress
+                  ? `You have answered ${inProgress.answered_count} of ${inProgress.question_count} questions. Your progress is saved securely.`
+                  : 'The diagnostic takes one sitting and establishes a baseline across all eight technical categories, unlocking targeted practice.'}
+              </p>
+              
               <Link href={'/diagnostic' as Route}>
-                <Button size="lg">
-                  {inProgress ? 'Resume diagnostic' : 'Take the diagnostic'}
+                <Button size="lg" className="bg-text-primary text-canvas hover:bg-text-secondary">
+                  {inProgress ? 'Resume Diagnostic' : 'Take Diagnostic'}
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
             </div>
@@ -80,90 +76,96 @@ export default async function DashboardPage() {
     );
   }
 
-  const band = bandForScore(weakest.score ?? 0);
-
   return (
     <AppShell email={user.email} isAdmin={user.is_admin} current="/dashboard">
-      <main className="mx-auto w-full max-w-3xl space-y-10 px-6 py-12">
-        <div>
-          <p className="label-micro">Home</p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
-            Your readiness
-          </h1>
-        </div>
-
-        {/* Current state, then the weakest area — the two facts that make the action below
-            make sense. */}
-        <section className="grid gap-4 sm:grid-cols-[1fr_1.4fr]">
-          <div className="rounded-[--radius-card] border border-border-subtle bg-surface-1 p-5">
-            <p className="label-micro">Overall</p>
-            <p className="tabular mt-2 text-4xl font-semibold text-text-primary">
-              {progress?.overall ?? '—'}
-            </p>
-            <p className="mt-2 text-xs text-text-muted">
-              {measured.length} of {progress?.total_categories ?? 8} categories measured
+      <main className="mx-auto w-full max-w-5xl px-6 py-10 space-y-16 animate-in fade-in duration-700">
+        <header className="flex items-end justify-between border-b border-border-subtle pb-6">
+          <div>
+            <p className="label-micro text-accent mb-2">OVERVIEW</p>
+            <h1 className="text-3xl font-light tracking-tight text-text-primary">
+              Performance Analytics
+            </h1>
+          </div>
+          <div className="text-right hidden sm:block">
+            <p className="text-sm font-medium text-text-secondary">
+              {measured.length} / {progress?.total_categories ?? 8} categories evaluated
             </p>
           </div>
+        </header>
 
-          <div
-            className={[
-              'rounded-[--radius-card] border p-5',
-              band === 'needs-work'
-                ? 'border-band-needs-work/30 bg-band-needs-work/[0.06]'
-                : 'border-border-subtle bg-surface-1',
-            ].join(' ')}
-          >
-            <p className="label-micro">Weakest area</p>
-            <p className="mt-2 text-lg font-medium text-text-primary">{weakest.name}</p>
-            <p
-              className={[
-                'tabular mt-1 text-3xl font-semibold',
-                band === 'strong'
-                  ? 'text-band-strong'
-                  : band === 'developing'
-                    ? 'text-band-developing'
-                    : 'text-band-needs-work',
-              ].join(' ')}
-            >
-              {weakest.score}
-            </p>
-          </div>
-        </section>
-
-        {/* The recommended action. One, not a menu. */}
-        <section className="flex flex-wrap items-center justify-between gap-4 rounded-[--radius-card] border border-border-strong bg-surface-1 p-6">
-          <div className="min-w-0">
-            <p className="label-micro">Do this next</p>
-            <p className="mt-2 text-base text-text-primary">
-              {weakest.name} is your weakest category at {weakest.score}. Ten questions there will
-              move it further than anything else you could do today.
-            </p>
-          </div>
-          <div className="space-y-2">
-            <Link href={`/practice?category=${weakest.slug}` as Route}>
-              <Button size="lg">Practise {weakest.name}</Button>
-            </Link>
-            {/* The allowance sits under the action it constrains, so a student learns what is
-                left before spending it rather than by being refused. */}
-            {entitlement ? (
-              <AllowanceMeter entitlement={entitlement} kind="practice" />
+        <section className="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
+          {/* Overall Score */}
+          <div className="w-full md:w-1/3 flex flex-col gap-2">
+            <p className="label-micro text-text-muted mb-2">GLOBAL MASTERY</p>
+            <div className="flex items-baseline gap-3">
+              <p className="tabular text-7xl font-light tracking-tight text-text-primary">
+                {progress?.overall ?? '—'}
+              </p>
+              <span className="text-xl text-text-muted font-light">/ 100</span>
+            </div>
+            {progress ? (
+              <div className="h-12 w-full mt-2">
+                <MasteryTrend trend={progress.trend} movement={progress.movement} sparklineOnly />
+              </div>
             ) : null}
           </div>
+
+          <div className="hidden md:block w-[1px] self-stretch bg-border-subtle" />
+
+          {/* Priority Area */}
+          <div className="w-full md:flex-1 flex flex-col gap-6">
+            <div>
+              <p className="label-micro text-accent mb-2">PRIORITY AREA</p>
+              <div className="flex items-baseline gap-4 mb-2">
+                <h2 className="text-3xl font-medium tracking-tight text-text-primary">
+                  {weakest.name}
+                </h2>
+                <span className="tabular font-mono text-lg text-text-muted">{weakest.score} / 100</span>
+              </div>
+              <p className="text-base text-text-secondary max-w-xl leading-relaxed">
+                Your weakest category. Targeted practice here will yield the highest ROI on your overall score.
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <Link href={`/practice?category=${weakest.slug}` as Route}>
+                <Button size="lg" className="bg-text-primary text-canvas hover:bg-text-secondary rounded-full px-8 shadow-sm">
+                  Practice {weakest.name}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              {entitlement ? (
+                <div className="opacity-80">
+                  <AllowanceMeter entitlement={entitlement} kind="practice" />
+                </div>
+              ) : null}
+            </div>
+          </div>
         </section>
 
-        {progress ? <MasteryTrend trend={progress.trend} movement={progress.movement} /> : null}
+        {progress && progress.movement !== null ? (
+          <section className="pt-8 border-t border-border-subtle">
+            <div className="flex items-center gap-2 mb-6">
+              <TrendingUp className="w-4 h-4 text-text-muted" />
+              <h2 className="label-micro">MASTERY TREND</h2>
+            </div>
+            <div className="h-32">
+              <MasteryTrend trend={progress.trend} movement={progress.movement} />
+            </div>
+          </section>
+        ) : null}
 
         {recent && recent.items.length > 0 ? (
-          <section aria-labelledby="recent-heading" className="space-y-4">
+          <section aria-labelledby="recent-heading" className="space-y-6 pt-12 border-t border-border-subtle">
             <div className="flex items-baseline justify-between">
-              <h2 id="recent-heading" className="label-micro">
-                Recent answers
+              <h2 id="recent-heading" className="text-lg font-medium tracking-tight text-text-primary">
+                Recent Evaluations
               </h2>
               <Link
                 href={'/review' as Route}
-                className="text-sm text-accent underline-offset-4 hover:underline"
+                className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors flex items-center gap-1"
               >
-                All history
+                View all history <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
             <ReviewList items={recent.items} filtered={false} />

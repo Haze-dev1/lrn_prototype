@@ -10,7 +10,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   /** Renders a busy state and blocks interaction while an action is in flight. */
@@ -43,6 +43,7 @@ export function Button({
   fullWidth = false,
   disabled,
   children,
+  className,
   ...props
 }: ButtonProps) {
   const isDisabled = disabled === true || loading;
@@ -58,6 +59,7 @@ export function Button({
         VARIANT_STYLES[variant],
         SIZE_STYLES[size],
         fullWidth ? 'w-full' : '',
+        className || '',
       ].join(' ')}
     >
       {loading ? <Spinner /> : null}

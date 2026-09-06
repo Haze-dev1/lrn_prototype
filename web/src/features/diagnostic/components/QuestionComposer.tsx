@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-
 import { Textarea } from '@/components/ui/Textarea';
+import { cn } from '@/utils/cn';
+import { PenLine } from 'lucide-react';
 
 const MAX_ANSWER_LENGTH = 2000;
-// Below this the answer is almost certainly not a real attempt, so the submit action stays
-// disabled rather than spending a grading call to tell the student their two words were thin.
 const MIN_USEFUL_LENGTH = 20;
 
 export interface QuestionComposerProps {
@@ -15,21 +14,11 @@ export interface QuestionComposerProps {
   disabled?: boolean;
 }
 
-/**
- * The answer input.
- *
- * Deliberately a plain, large textarea. This is the surface a student spends most of the
- * assessment looking at, and every affordance beyond "write your answer" — formatting controls,
- * suggestions, a chat transcript — would change what the product appears to be. It is a written
- * exam answer, not a conversation.
- */
 export function QuestionComposer({ value, onChange, disabled = false }: QuestionComposerProps) {
   const ref = useRef<HTMLTextAreaElement>(null);
   const [touched, setTouched] = useState(false);
+  const [focused, setFocused] = useState(false);
 
-  // Focus on mount so a keyboard user can start typing without tabbing in. The parent keys this
-  // component on the question ID, so moving to a new question remounts it — which resets the
-  // draft and `touched` for free, rather than resetting them from inside an effect.
   useEffect(() => {
     ref.current?.focus();
   }, []);
@@ -38,29 +27,55 @@ export function QuestionComposer({ value, onChange, disabled = false }: Question
   const tooShort = touched && value.trim().length > 0 && value.trim().length < MIN_USEFUL_LENGTH;
 
   return (
-    <div className="space-y-2">
+    <div className={cn(
+      "relative rounded-[--radius-lg] border bg-surface-1 transition-all duration-300",
+      focused ? "border-accent shadow-[0_0_0_1px_var(--color-accent)]" : "border-border-strong hover:border-border-subtle"
+    )}>
       <label htmlFor="answer" className="sr-only">
         Your answer
       </label>
+      
+      {/* Workspace Header */}
+      <div className="flex items-center gap-2 border-b border-border-subtle bg-surface-2/50 px-4 py-2.5 rounded-t-[--radius-lg]">
+        <PenLine className="w-4 h-4 text-text-muted" />
+        <span className="label-micro">Draft Answer</span>
+      </div>
+
       <Textarea
         id="answer"
         ref={ref}
-        rows={12}
+        rows={10}
         value={value}
         maxLength={MAX_ANSWER_LENGTH}
         disabled={disabled}
-        placeholder="Answer as you would out loud in an interview."
+        placeholder="Structure your answer carefully, as you would in a technical interview."
+        className="w-full resize-y border-none bg-transparent px-4 py-4 text-base leading-relaxed text-text-primary placeholder:text-text-muted focus:ring-0 focus-visible:ring-0 rounded-b-[--radius-lg] min-h-[200px]"
         onChange={(event) => onChange(event.target.value)}
-        onBlur={() => setTouched(true)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => {
+          setFocused(false);
+          setTouched(true);
+        }}
         aria-describedby="answer-meta"
+        style={{ boxShadow: 'none' }}
       />
-      <div id="answer-meta" className="flex justify-between text-xs">
-        <span className="text-text-muted">
-          {tooShort ? 'Write a little more before submitting.' : 'Structure beats length.'}
+      
+      {/* Footer Info */}
+      <div id="answer-meta" className="flex justify-between items-center px-4 py-3 border-t border-border-subtle bg-surface-1/50 rounded-b-[--radius-lg]">
+        <span className={cn("text-xs font-medium", tooShort ? 'text-band-developing' : 'text-text-muted')}>
+          {tooShort ? 'Write a bit more to submit.' : 'Clear and structured is better than long.'}
         </span>
-        <span className={remaining < 100 ? 'tabular text-band-developing' : 'tabular text-text-muted'}>
-          {remaining} left
-        </span>
+        <div className="flex items-center gap-4">
+          <div className="w-24 h-1 rounded-full bg-surface-3 overflow-hidden hidden sm:block">
+            <div 
+              className="h-full bg-accent transition-all duration-300"
+              style={{ width: `${Math.min(100, (value.length / MIN_USEFUL_LENGTH) * 100)}%` }}
+            />
+          </div>
+          <span className={cn("tabular text-xs font-mono font-medium", remaining < 100 ? 'text-band-developing' : 'text-text-muted')}>
+            {remaining} left
+          </span>
+        </div>
       </div>
     </div>
   );

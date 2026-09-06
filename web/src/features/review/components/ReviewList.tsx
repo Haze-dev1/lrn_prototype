@@ -46,29 +46,29 @@ export function ReviewList({ items, filtered }: ReviewListProps) {
   }
 
   return (
-    <ul className="divide-y divide-border-subtle rounded-[--radius-card] border border-border-subtle">
+    <ul className="divide-y divide-border-subtle border-y border-border-subtle mt-4">
       {items.map((item) => (
-        <li key={item.id}>
+        <li key={item.id} className="group">
           <Link
             href={`/review/${item.id}` as Route}
-            className="flex gap-5 px-5 py-4 transition-colors hover:bg-surface-1"
+            className="flex gap-6 py-5 transition-colors group-hover:bg-surface-1/50 -mx-4 px-4 rounded-md"
           >
             <span
-              className={`tabular w-10 shrink-0 text-2xl font-semibold ${SCORE_COLOUR[item.band]}`}
+              className={`tabular w-12 shrink-0 text-3xl font-light ${SCORE_COLOUR[item.band]}`}
             >
               {item.score}
             </span>
 
             <span className="min-w-0 flex-1">
-              <span className="flex flex-wrap items-center gap-2">
-                <span className="label-micro">{item.category_name}</span>
+              <span className="flex flex-wrap items-center gap-2 mb-1.5">
+                <span className="label-micro text-text-muted">{item.category_name}</span>
                 {item.flagged ? <Badge tone="developing">Flagged</Badge> : null}
               </span>
-              <span className="mt-1 line-clamp-2 block text-sm text-text-primary">
+              <span className="line-clamp-2 block text-sm text-text-primary leading-relaxed font-medium">
                 {item.prompt}
               </span>
               {item.concepts_missed.length > 0 ? (
-                <span className="mt-1 block text-xs text-text-muted">
+                <span className="mt-2 block text-xs text-text-muted font-mono">
                   {item.concepts_missed.length} concept
                   {item.concepts_missed.length === 1 ? '' : 's'} missed
                 </span>

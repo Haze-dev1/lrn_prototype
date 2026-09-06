@@ -7,6 +7,8 @@
 
 import type { ReactNode } from 'react';
 
+import { cn } from '@/utils/cn';
+
 export type AlertTone = 'error' | 'success' | 'info';
 
 const TONE_STYLES: Record<AlertTone, string> = {
@@ -15,11 +17,18 @@ const TONE_STYLES: Record<AlertTone, string> = {
   info: 'border-border-subtle bg-surface-2 text-text-secondary',
 };
 
-export function Alert({ tone = 'info', children }: { tone?: AlertTone; children: ReactNode }) {
+export interface AlertProps {
+  tone?: AlertTone;
+  children: ReactNode;
+  className?: string;
+}
+
+export function Alert({ tone = 'info', children, className }: AlertProps) {
   return (
     <div
       role={tone === 'error' ? 'alert' : 'status'}
-      className={`rounded-md border px-3 py-2.5 text-sm ${TONE_STYLES[tone]}`}
+      // `className` was accepted and then dropped, so callers passing spacing got none.
+      className={cn('rounded-md border px-3 py-2.5 text-sm', TONE_STYLES[tone], className)}
     >
       {children}
     </div>

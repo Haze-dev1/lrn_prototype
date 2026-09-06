@@ -164,14 +164,17 @@ describe('MasteryTrend', () => {
   it('draws a line once there are two measured points', () => {
     render(<MasteryTrend trend={[point(40, 1), point(62, 2)]} movement={22} />);
 
-    expect(screen.getByRole('img')).toBeInTheDocument();
-    expect(screen.getByText('62')).toBeInTheDocument();
+    // The line itself is the claim: the stroked polyline carries one vertex per measured point.
+    // The movement figure is asserted separately below.
+    const line = screen.getByRole('img').querySelector('polyline[fill="none"]');
+    expect(line).not.toBeNull();
+    expect(line?.getAttribute('points')?.trim().split(/\s+/)).toHaveLength(2);
   });
 
   it('reports movement with a sign', () => {
     render(<MasteryTrend trend={[point(40, 1), point(62, 2)]} movement={22} />);
 
-    expect(screen.getByText(/\+22 over 2 weeks/)).toBeInTheDocument();
+    expect(screen.getByText(/\+22 points over 2 weeks/)).toBeInTheDocument();
   });
 
   it('ignores weeks before the student had any evidence', () => {

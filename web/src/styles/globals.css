@@ -1,58 +1,92 @@
 @import 'tailwindcss';
 
-/*
- * LRN design tokens.
- *
- * Dark-first by definition, not by preference: the product is used in long focused sessions and
- * the assessment surfaces must not glare. Colour is treated as a scarce resource — chrome is
- * near-monochrome, and saturated colour is reserved almost entirely for mastery evidence, so a
- * red category on a dashboard is the only thing competing for attention.
- */
 @theme {
-  /* Canvas and layered surfaces. Deep blue-charcoal, never pure black: absolute black kills the
-     sense of depth that separates a raised card from the page beneath it. */
-  --color-canvas: oklch(0.16 0.014 255);
-  --color-surface-1: oklch(0.2 0.016 255);
-  --color-surface-2: oklch(0.24 0.018 255);
-  --color-surface-3: oklch(0.29 0.02 255);
+  /* Dark Mode (Default) - Sophisticated, premium fintech */
+  --color-canvas: oklch(0.18 0.01 250); /* #101216 slightly bluish deep charcoal */
+  --color-surface-1: oklch(0.22 0.01 250); /* Slightly lighter */
+  --color-surface-2: oklch(0.26 0.01 250);
+  --color-surface-3: oklch(0.3 0.01 250);
+  --color-surface-elevated: oklch(0.24 0.01 250);
 
-  --color-border-subtle: oklch(0.31 0.018 255);
-  --color-border-strong: oklch(0.4 0.022 255);
+  --color-border-subtle: oklch(0.3 0.01 250 / 0.5);
+  --color-border-strong: oklch(0.35 0.01 250);
+  --color-border-accent: var(--color-accent-muted);
 
-  --color-text-primary: oklch(0.95 0.006 255);
-  --color-text-secondary: oklch(0.72 0.017 255);
-  --color-text-muted: oklch(0.57 0.021 255);
-  --color-text-inverse: oklch(0.16 0.014 255);
+  --color-text-primary: oklch(0.96 0 0); /* Almost white */
+  --color-text-secondary: oklch(0.7 0.01 250); /* Gray with slight cool tint */
+  --color-text-muted: oklch(0.55 0.01 250);
+  --color-text-inverse: oklch(0.15 0.01 250);
 
-  /* Interactive accent. Used for focus rings, active navigation and links — never as decoration. */
-  --color-accent: oklch(0.79 0.121 213);
-  --color-accent-strong: oklch(0.71 0.135 213);
-  --color-accent-muted: oklch(0.42 0.062 213);
+  /* Accent: A confident, premium gold/bronze for fintech, or maybe a sharp, vivid mint/teal. 
+     Cred uses deep aesthetics with sharp accents. Let's use a very premium, sharp electric blue/teal,
+     or maybe a stark white accent like Cartesia. Let's go with a premium stark white + subtle glowing blue.
+     Actually, let's use a confident indigo/blue for trust and finance. */
+  --color-accent: oklch(0.65 0.15 250); /* Vivid, premium blue */
+  --color-accent-hover: oklch(0.7 0.15 250);
+  --color-accent-muted: oklch(0.65 0.15 250 / 0.15);
+  --color-accent-foreground: oklch(0.98 0.02 250);
+  
+  --color-success: oklch(0.7 0.14 160); /* Crisp green */
+  --color-warning: oklch(0.8 0.14 80); /* Crisp orange */
+  --color-error: oklch(0.6 0.2 20); /* Confident red */
+  --color-info: oklch(0.7 0.1 230);
+  --color-danger: var(--color-error);
 
-  /* Mastery bands. These carry meaning and must stay visually distinct from the accent. */
-  --color-band-strong: oklch(0.77 0.155 158);
-  --color-band-developing: oklch(0.8 0.137 79);
-  --color-band-needs-work: oklch(0.68 0.183 21);
+  /* Mastery bands */
+  --color-band-strong: var(--color-success);
+  --color-band-developing: var(--color-warning);
+  --color-band-needs-work: var(--color-error);
 
-  --color-danger: oklch(0.68 0.183 21);
-  --color-success: oklch(0.77 0.155 158);
+  --font-sans: var(--font-primary), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-raw), ui-monospace, 'SF Mono', monospace;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, 'SF Mono', monospace;
+  /* Restrained, professional radius */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-card: 0.375rem; /* Not aggressively rounded */
 
-  --radius-card: 0.625rem;
+  /* Shadows for depth */
+  --shadow-subtle: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-elevated: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-popover: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
 
-  /* Motion is used to communicate state change, so durations are short and easing is decisive. */
   --ease-out-quick: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-smooth: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 @layer base {
   :root {
     color-scheme: dark;
+    /* We map CSS variables to theme vars so we can override them in light mode */
+  }
+
+  .light {
+    color-scheme: light;
+    
+    --color-canvas: oklch(0.99 0.002 250); /* #fcfcfc */
+    --color-surface-1: oklch(0.96 0.005 250);
+    --color-surface-2: oklch(0.92 0.008 250);
+    --color-surface-3: oklch(0.88 0.01 250);
+    --color-surface-elevated: oklch(1 0 0); /* Pure white */
+
+    --color-border-subtle: oklch(0.9 0.01 250);
+    --color-border-strong: oklch(0.8 0.01 250);
+    --color-border-accent: var(--color-accent-muted);
+
+    --color-text-primary: oklch(0.15 0.02 250);
+    --color-text-secondary: oklch(0.4 0.01 250);
+    --color-text-muted: oklch(0.55 0.01 250);
+    --color-text-inverse: oklch(0.98 0 0);
+    
+    --color-accent-muted: oklch(0.65 0.15 250 / 0.08);
+
+    --shadow-subtle: 0 1px 2px 0 rgb(0 0 0 / 0.02);
+    --shadow-elevated: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-popover: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
   }
 
   html {
-    /* Long assessment prompts read better without the browser's default text inflation. */
     -webkit-text-size-adjust: 100%;
   }
 
@@ -60,20 +94,21 @@
     background-color: var(--color-canvas);
     color: var(--color-text-primary);
     font-family: var(--font-sans);
-    font-feature-settings: 'cv11', 'ss01';
+    font-feature-settings: 'cv11', 'ss01', 'calt';
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Numerals must not reflow as scores animate or tables update. */
   .tabular {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Small uppercase labels carry the assessment/terminal register the product is aiming for. */
+  /* Sophisticated label */
   .label-micro {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
-    letter-spacing: 0.1em;
+    font-weight: 500;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-muted);
   }
@@ -83,17 +118,6 @@
     outline-offset: 2px;
   }
 
-  /*
-   * The grade reveal on the landing page.
-   *
-   * A CSS animation rather than a client component, so the marketing page ships zero JavaScript:
-   * a keyframe with `both` fill runs on load without anything to hydrate.
-   *
-   * It exists because the product's defining moment is a grade appearing after an answer is
-   * submitted, and showing that is more honest than describing it. It is one short reveal, not a
-   * simulated "thinking" animation — the product does not have one of those and the page must not
-   * imply otherwise. The reduced-motion block below collapses it to nothing.
-   */
   @keyframes lrn-reveal {
     from {
       opacity: 0;
@@ -109,29 +133,22 @@
     animation: lrn-reveal 420ms var(--ease-out-quick) both;
   }
 
-  /*
-   * A concept the grader looked for and did not find, marked where it should have appeared.
-   *
-   * A dashed outline rather than a strikethrough: nothing was crossed out, something is missing,
-   * and the two read differently. This is the page's one piece of visual invention and it earns
-   * its place by making "we grade what you did not say" legible without a caption.
-   */
   .concept-missing {
     border: 1px dashed var(--color-band-needs-work);
     color: var(--color-band-needs-work);
-    border-radius: 4px;
-    padding: 0.05em 0.4em;
+    border-radius: var(--radius-sm);
+    padding: 0.1em 0.4em;
     font-family: var(--font-mono);
-    font-size: 0.8em;
+    font-size: 0.85em;
+    font-weight: 500;
     white-space: nowrap;
   }
 
-  /* A concept the answer actually established, underlined in the student's own words. */
   .concept-hit {
     color: var(--color-text-primary);
     background: transparent;
-    border-bottom: 2px solid var(--color-band-strong);
-    padding-bottom: 1px;
+    border-bottom: 1.5px solid var(--color-band-strong);
+    padding-bottom: 2px;
   }
 
   ::selection {
@@ -148,5 +165,14 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+/* Custom Utilities for Premium Look */
+@layer utilities {
+  .glass-panel {
+    background: color-mix(in oklch, var(--color-surface-elevated) 85%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-subtle);
   }
 }

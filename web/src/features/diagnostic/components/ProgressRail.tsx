@@ -57,10 +57,15 @@ export function ProgressRail({
                 'h-1.5 flex-1 rounded-full transition-colors',
                 'focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent',
                 'disabled:cursor-default',
-                isCurrent
-                  ? 'bg-accent'
-                  : isAnswered
-                    ? 'bg-text-muted hover:bg-text-secondary'
+                // A solid mark always means answered. The current question is shown by a
+                // tint rather than a full fill, so the first segment no longer reads as
+                // progress at "0 of 24 answered".
+                isAnswered
+                  ? isCurrent
+                    ? 'bg-accent'
+                    : 'bg-text-muted hover:bg-text-secondary'
+                  : isCurrent
+                    ? 'bg-accent/30'
                     : 'bg-surface-3 hover:bg-border-strong',
               ].join(' ')}
             />

@@ -16,28 +16,21 @@ export interface MasteryTrendProps {
  * the student had any evidence are simply absent from the line: drawing them at zero would show
  * a dramatic rise that is really just the moment they started.
  */
-export function MasteryTrend({ trend, movement }: MasteryTrendProps) {
+export function MasteryTrend({ trend, movement, sparklineOnly }: MasteryTrendProps & { sparklineOnly?: boolean }) {
   const measured = trend.filter((point) => point.overall !== null);
 
   if (measured.length < 2) {
     return (
-      <section
-        aria-labelledby="trend-heading"
-        className="rounded-[--radius-card] border border-border-subtle bg-surface-1 p-5"
-      >
-        <h2 id="trend-heading" className="label-micro">
-          Are you improving?
-        </h2>
-        <p className="mt-3 text-sm text-text-secondary">
-          Not enough history yet. Come back after another session and this will show how your
-          overall mastery has moved.
+      <div className="flex flex-col">
+        <p className="text-sm text-text-secondary">
+          Not enough history yet.
         </p>
-      </section>
+      </div>
     );
   }
 
   const width = 100;
-  const height = 28;
+  const height = 40;
   const values = measured.map((point) => point.overall ?? 0);
   const min = Math.min(...values, 0);
   const max = Math.max(...values, 100);
@@ -49,50 +42,66 @@ export function MasteryTrend({ trend, movement }: MasteryTrendProps) {
     })
     .join(' ');
 
-  const latest = values[values.length - 1] ?? 0;
   const rising = (movement ?? 0) > 0;
+  const strokeColor = rising ? 'currentColor' : 'currentColor';
 
+  const latestValue = values[values.length - 1] ?? 0;
+  
   return (
-    <section
-      aria-labelledby="trend-heading"
-      className="rounded-[--radius-card] border border-border-subtle bg-surface-1 p-5"
-    >
-      <div className="flex items-baseline justify-between gap-4">
-        <h2 id="trend-heading" className="label-micro">
-          Are you improving?
-        </h2>
-        {movement !== null ? (
+    <div className="flex flex-col w-full h-full justify-end">
+      {!sparklineOnly && movement !== null ? (
+        <div className="flex items-baseline justify-between gap-4 mb-4">
           <p
             className={[
-              'tabular text-sm',
+              'tabular text-sm font-medium',
               movement > 0 ? 'text-band-strong' : movement < 0 ? 'text-band-needs-work' : 'text-text-muted',
             ].join(' ')}
           >
             {movement > 0 ? '+' : ''}
-            {movement} over {measured.length} weeks
+            {movement} points over {measured.length} weeks
           </p>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
-      <div className="mt-4 flex items-end gap-4">
-        <p className="tabular text-4xl font-semibold text-text-primary">{latest}</p>
+      <div className="flex items-end h-full relative">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           preserveAspectRatio="none"
-          className="h-12 flex-1"
+          className="h-full w-full overflow-visible"
           role="img"
-          aria-label={`Overall mastery over the last ${measured.length} weeks, currently ${latest}`}
+          aria-label="Overall mastery trend"
         >
+          <defs>
+            <linearGradient id="sparkline-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polyline
+            points={`${points} ${width},${height} 0,${height}`}
+            fill="url(#sparkline-gradient)"
+            className="text-accent/20"
+          />
           <polyline
             points={points}
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
+            strokeLinejoin="round"
+            strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
-            className={rising ? 'text-band-strong' : 'text-accent'}
+            className={rising ? 'text-band-strong' : 'text-text-primary opacity-60'}
+          />
+          {/* Latest point dot */}
+          <circle 
+            cx={width} 
+            cy={height - ((latestValue - min) / (max - min || 1)) * height} 
+            r="2.5" 
+            fill="currentColor" 
+            className={rising ? 'text-band-strong' : 'text-text-primary'}
           />
         </svg>
       </div>
-    </section>
+    </div>
   );
 }
